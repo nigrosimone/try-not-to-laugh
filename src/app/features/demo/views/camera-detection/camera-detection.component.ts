@@ -67,7 +67,7 @@ export class CameraDetectionComponent implements AfterViewInit {
       faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
       if (result.expressions.happy > 0.8) {
         videoEl.pause();
-        window.open(this.captureVideo(), '_blank');
+        canvas.style.display = 'none';
       }
     } else {
       canvas.style.display = 'none';
