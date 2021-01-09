@@ -5,7 +5,12 @@ import { DemoComponent } from './demo.component';
 const routes: Routes = [
   {
     path: '',
-    component: DemoComponent
+    redirectTo: 'camera-detection',
+    pathMatch: 'full'
+  },
+  {
+    path: 'camera-detection',
+    loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
   },
 ];
 
