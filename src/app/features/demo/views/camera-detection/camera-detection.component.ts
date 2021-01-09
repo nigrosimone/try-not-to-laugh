@@ -12,6 +12,8 @@ export class CameraDetectionComponent implements AfterViewInit {
   @ViewChild('video', { static: false }) video: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
 
+  public loading = false;
+
   constructor() { }
 
   ngAfterViewInit(): void {
@@ -26,6 +28,8 @@ export class CameraDetectionComponent implements AfterViewInit {
       URI = baseHref + URI.substring(1);
     }
 
+    this.loading = true;
+
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
       faceapi.nets.faceLandmark68Net.loadFromUri(URI),
@@ -33,6 +37,9 @@ export class CameraDetectionComponent implements AfterViewInit {
       faceapi.nets.faceExpressionNet.loadFromUri(URI),
       faceapi.nets.ssdMobilenetv1.loadFromUri(URI)
     ]);
+
+    this.loading = false;
+
     // avviamo lo stream del webcam
     const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
     this.video.nativeElement.srcObject = stream;
