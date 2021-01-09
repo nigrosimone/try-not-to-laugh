@@ -20,7 +20,12 @@ export class CameraDetectionComponent implements AfterViewInit {
 
   async run() {
     // carichiamo i modelli ML
-    const URI = "/assets/weights/";
+    const baseHref = (document.getElementsByTagName('base')[0] || {}).href;
+    let URI = '/assets/weights/';
+    if( baseHref ){
+      URI = baseHref + URI.substring(1);
+    }
+    
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
       faceapi.nets.faceLandmark68Net.loadFromUri(URI),
