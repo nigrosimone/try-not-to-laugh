@@ -47,11 +47,14 @@ export class DemoComponent implements AfterViewInit {
 
     if (result) {
       // posizioniamo il canvas sul video
+      canvas.style.display = 'block';
       const dims = faceapi.matchDimensions(canvas, videoEl, true);
       const resizedResult = faceapi.resizeResults(result, dims);
       const minConfidence = 0.05
       faceapi.draw.drawDetections(canvas, resizedResult);
       faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
+    } else {
+      canvas.style.display = 'none';
     }
 
     setTimeout(() => this.onPlay());
