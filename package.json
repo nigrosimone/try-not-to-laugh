@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-	"build-github": "ng build --prod --base-href https://nigrosimone.github.io/try-not-to-laugh-frontend/",
-    "deploy-github": "ng build --prod --base-href https://nigrosimone.github.io/try-not-to-laugh-frontend/ && angular-cli-ghpages -d dist/try-not-to-laugh/ --no-silent"
+	  "build-github": "ng build --prod --base-href https://nigrosimone.github.io/try-not-to-laugh-frontend/",
+    "deploy-github": "npm run build-github && angular-cli-ghpages -d dist/try-not-to-laugh/ --no-silent"
   },
   "private": true,
   "dependencies": {
