@@ -1,4 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { IfStmt } from '@angular/compiler';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 
 
@@ -7,14 +8,21 @@ import * as faceapi from 'face-api.js';
   templateUrl: './camera-detection.component.html',
   styleUrls: ['./camera-detection.component.scss']
 })
-export class CameraDetectionComponent implements AfterViewInit {
+export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('video', { static: false }) video: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
 
   public loading = false;
+  private stream: MediaStream;
 
   constructor(private cdr: ChangeDetectorRef) { }
+
+  ngOnDestroy(): void {
+    if (this.stream) {
+      this.stream.getTracks().forEach(track => track.stop());
+    }
+  }
 
   ngAfterViewInit(): void {
     this.run();
@@ -43,8 +51,8 @@ export class CameraDetectionComponent implements AfterViewInit {
     this.cdr.detectChanges();
 
     // avviamo lo stream del webcam
-    const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    this.video.nativeElement.srcObject = stream;
+    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+    this.video.nativeElement.srcObject = this.stream;
   }
 
   async onPlay(): Promise<number> {
