@@ -15,7 +15,7 @@ export class FacebookLoginComponent implements OnInit {
   constructor(private httpClient: HttpClient,  private router: Router){}
 
   ngOnInit(): void {
-    this.httpClient.get(environment.api + 'auth/facebook/profile').subscribe(data => {
+    this.httpClient.get(environment.api + 'auth/facebook/profile', {withCredentials: true}).subscribe(data => {
       this.userData = data;
     });
   }
