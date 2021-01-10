@@ -5,13 +5,14 @@ import { DemoComponent } from './demo.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'camera-detection',
-    pathMatch: 'full'
-  },
-  {
-    path: 'camera-detection',
-    loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
-  },
+    component: DemoComponent,
+    children: [
+      {
+        path: 'camera-detection',
+        loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
+      },
+    ]
+  }
 ];
 
 @NgModule({
