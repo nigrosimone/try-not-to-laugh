@@ -1,5 +1,9 @@
-Facebook Login
-<button (click)="onLogin()" *ngIf="!userData">Login</button>
-<ng-container *ngIf="userData">
-{{ userData | json }}
-</ng-container>
+
+<button (click)="onLogin()" *ngIf="!userData?.user">Login</button>
+<button (click)="onLogout()" *ngIf="userData?.user">Logout</button>
+<pre *ngIf="error">
+    {{ error | json }}
+</pre>
+<pre *ngIf="userData?.user">
+{{ userData?.user | json }}
+</pre>

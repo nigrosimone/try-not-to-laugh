@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-facebook-login',
@@ -11,13 +10,21 @@ import { Router } from '@angular/router';
 export class FacebookLoginComponent implements OnInit {
 
   public userData = null;
+  public error = null;
 
-  constructor(private httpClient: HttpClient,  private router: Router){}
+  constructor(private httpClient: HttpClient){}
 
   ngOnInit(): void {
-    this.httpClient.get(environment.api + 'auth/facebook/profile', {withCredentials: true}).subscribe(data => {
-      this.userData = data;
-    });
+    this.httpClient.get(environment.api + 'auth/facebook/profile', {withCredentials: true}).subscribe(
+      data => this.userData = data
+    );
+  }
+
+  onLogout(): void {
+    this.httpClient.get(environment.api + 'auth/logout', {withCredentials: true}).subscribe(
+      data => this.userData = data,
+      error => this.error = error
+    );
   }
 
   onLogin(): void {
