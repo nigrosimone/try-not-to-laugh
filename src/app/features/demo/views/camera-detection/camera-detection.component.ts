@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 
 
@@ -14,7 +14,7 @@ export class CameraDetectionComponent implements AfterViewInit {
 
   public loading = false;
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit(): void {
     this.run();
@@ -29,16 +29,18 @@ export class CameraDetectionComponent implements AfterViewInit {
     }
 
     this.loading = true;
+    this.cdr.detectChanges();
 
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
-      faceapi.nets.faceLandmark68Net.loadFromUri(URI),
+      // faceapi.nets.faceLandmark68Net.loadFromUri(URI),
       faceapi.nets.faceRecognitionNet.loadFromUri(URI),
       faceapi.nets.faceExpressionNet.loadFromUri(URI),
-      faceapi.nets.ssdMobilenetv1.loadFromUri(URI)
+      // faceapi.nets.ssdMobilenetv1.loadFromUri(URI)
     ]);
 
     this.loading = false;
+    this.cdr.detectChanges();
 
     // avviamo lo stream del webcam
     const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -56,7 +58,7 @@ export class CameraDetectionComponent implements AfterViewInit {
 
     // cerchiamo la faccia nel video
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-    console.log('detectSingleFace', result);
+    console.log('detectSingleFace', result?.expressions);
     if (result) {
       // posizioniamo il canvas sul video
       canvas.style.display = 'block';
@@ -65,23 +67,10 @@ export class CameraDetectionComponent implements AfterViewInit {
       const minConfidence = 0.05;
       faceapi.draw.drawDetections(canvas, resizedResult);
       faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
-      if (result.expressions.happy > 0.8) {
-        videoEl.pause();
-        canvas.style.display = 'none';
-      }
     } else {
       canvas.style.display = 'none';
     }
 
     requestAnimationFrame(() => this.onPlay());
-  }
-
-  captureVideo(): string {
-    const canvas = document.createElement('canvas');
-    canvas.width = this.video.nativeElement.videoWidth;
-    canvas.height = this.video.nativeElement.videoHeight;
-    const canvasContext = canvas.getContext('2d');
-    canvasContext.drawImage(this.video.nativeElement, 0, 0);
-    return canvas.toDataURL('image/png');
   }
 }
