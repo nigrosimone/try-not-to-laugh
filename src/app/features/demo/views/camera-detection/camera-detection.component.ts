@@ -1,4 +1,3 @@
-import { IfStmt } from '@angular/compiler';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 
