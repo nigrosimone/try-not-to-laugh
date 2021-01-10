@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { AuthenticationService } from './core/services/auth.service';
+import { AuthenticationService } from './core/services/auth/auth.service';
+import { RoutingService } from './core/services/routing/routing.service';
 import { User } from './shared/models/user';
 
 @Component({
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public user: User;
   private subUser: Subscription;
 
-  constructor(private authenticationService: AuthenticationService, private cdr: ChangeDetectorRef, private route: Router) { }
+  constructor(private authenticationService: AuthenticationService, private cdr: ChangeDetectorRef, private routingService: RoutingService) { }
 
   ngOnInit(): void {
     this.subUser = this.authenticationService.currentUser.subscribe(user => {
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onLogout(): void {
     this.authenticationService.logout().then(() => {
-      this.route.navigateByUrl('/');
+      this.routingService.home();
     });
   }
 }
