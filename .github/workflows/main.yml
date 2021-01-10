@@ -16,9 +16,9 @@ jobs:
     - name: Use Node.js 10.x
       uses: actions/setup-node@v1 # Setup di Node utilizzando la action https://github.com/actions/setup-node
       with:
-        node-version: '14.x' # Nel nostro caso, utilizziamo la versione 10.x di Node
+        node-version: '14.x' # Nel nostro caso, utilizziamo la versione 14.x di Node
     - name: Build
-      run: | # Esecuzione dei comandi di setup e build del progetto Angular, non dimenticando il parametro
+      run: | # Esecuzione dei comandi di setup e build del progetto Angular
          npm install -g @angular/cli
          npm install
          npm run build-github
