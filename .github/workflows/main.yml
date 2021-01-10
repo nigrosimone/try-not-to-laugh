@@ -23,7 +23,7 @@ jobs:
          npm install
          npm run build-github
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v2 # Deploy su GitHub Pages utilizzando la action https://github.com/JamesIves/github-pages-deploy-action
+      uses: nigrosimone/try-not-to-laugh-frontend@releases/v2 # Deploy su GitHub Pages utilizzando la action
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }} # Indichiamo l'accesso token creato per essere autenticati correttamente, prelevandolo dalle Secrets
         BASE_BRANCH: master
