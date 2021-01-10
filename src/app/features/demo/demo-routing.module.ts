@@ -10,11 +10,7 @@ const routes: Routes = [
       {
         path: 'camera-detection',
         loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
-      },
-      {
-        path: 'facebook-login',
-        loadChildren: () => import('./views/facebook-login/facebook-login.module').then(m => m.FacebookLoginModule)
-      },
+      }
     ]
   }
 ];

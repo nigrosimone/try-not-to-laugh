@@ -1,9 +1,0 @@
-
-<button (click)="onLogin()" *ngIf="!userData?.user">Login</button>
-<button (click)="onLogout()" *ngIf="userData?.user">Logout</button>
-<pre *ngIf="error">
-    {{ error | json }}
-</pre>
-<pre *ngIf="userData?.user">
-{{ userData?.user | json }}
-</pre>
