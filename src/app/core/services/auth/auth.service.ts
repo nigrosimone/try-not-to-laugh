@@ -24,7 +24,7 @@ export class AuthenticationService {
         const user = this.currentUserValue;
         if (!user) {
             try {
-                const result = await this.http.get<{ data: User }>(environment.api + 'auth/facebook/profile', { withCredentials: true }).toPromise();
+                const result = await this.http.get<{ data: User }>(environment.api + 'api/auth/facebook/profile', { withCredentials: true }).toPromise();
                 this.currentUserSubject.next(result.data);
             } catch (error) {
                 if (error.status !== 401) {
@@ -37,11 +37,11 @@ export class AuthenticationService {
     }
 
     login(): void {
-        window.location.href = environment.api + 'auth/facebook';
+        window.location.href = environment.api + 'api/auth/facebook';
     }
 
     async logout(): Promise<void> {
-        const result = await this.http.get<{ data: User }>(environment.api + 'auth/logout', { withCredentials: true }).toPromise();
+        const result = await this.http.get<{ data: User }>(environment.api + 'api/auth/logout', { withCredentials: true }).toPromise();
         this.currentUserSubject.next(result.data);
     }
 }
