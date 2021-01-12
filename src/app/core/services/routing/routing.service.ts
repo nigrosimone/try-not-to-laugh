@@ -10,7 +10,7 @@ export class RoutingService {
 
     constructor(private route: Router) { }
 
-    home(): Promise<boolean> {
+    root(): Promise<boolean> {
         return this.route.navigateByUrl(`${this.baseURL}/`);
     }
 
@@ -18,11 +18,11 @@ export class RoutingService {
         return this.route.navigateByUrl(`${this.baseURL}/login`);
     }
 
-    demo(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/demo`);
+    home(): Promise<boolean> {
+        return this.route.navigateByUrl(`${this.baseURL}/home`);
     }
 
-    demoCameraDetection(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/demo/camera-detection`);
+    homeCameraDetection(): Promise<boolean> {
+        return this.route.navigateByUrl(`${this.baseURL}/home/camera-detection`);
     }
 }

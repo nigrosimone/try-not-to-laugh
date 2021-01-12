@@ -9,14 +9,14 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'demo',
-    loadChildren: () => import('./features/demo/demo.module').then(m => m.DemoModule),
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
-  },
-  {
     path: 'login',
     loadChildren: () => import('./features/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule),
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
   },
 ];
 

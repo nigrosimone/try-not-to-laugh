@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onLogout(): void {
     this.authenticationService.logout().then(() => {
-      this.routingService.home();
+      this.routingService.root();
     });
   }
 }

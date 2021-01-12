@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthenticationService } from 'src/app/core/services/auth/auth.service';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
-import { User } from 'src/app/shared/models/user';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,7 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subUser = this.authenticationService.currentUser.subscribe(user => {
-      this.routingService.demoCameraDetection();
+      this.routingService.home();
     });
     this.loading = true;
     this.cdr.detectChanges();
