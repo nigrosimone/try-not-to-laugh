@@ -1,4 +1,5 @@
 <mat-spinner *ngIf="loading"></mat-spinner>
+<h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
 <ul>
     <li>faceDetected: {{ faceDetected }}</li>
     <li>loseMatch: {{ loseMatch }}</li>
@@ -7,7 +8,7 @@
 <div [hidden]="!faceDetected || loseMatch">
     <youtube-player videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)" (stateChange)="onStateChange($event)" #youtube></youtube-player>
 </div>
-<div class="video-container" [hidden]="faceDetected || !loseMatch">
+<div class="video-container" [hidden]="faceDetected && !loseMatch">
     <video (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
     <canvas #canvas></canvas>
 </div>
