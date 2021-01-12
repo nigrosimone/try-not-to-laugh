@@ -7,7 +7,7 @@
 <div [hidden]="!faceDetected || loseMatch">
     <youtube-player videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)" (stateChange)="onStateChange($event)" #youtube></youtube-player>
 </div>
-<div class="video-container" [hidden]="faceDetected" [hidden]="faceDetected || !loseMatch">
+<div class="video-container" [hidden]="faceDetected || !loseMatch">
     <video (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
     <canvas #canvas></canvas>
 </div>

@@ -146,6 +146,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   loseGame(): void {
     this.loseMatch = true;
     this.video.nativeElement.pause();
+    this.youtube.pauseVideo();
     this.cdr.markForCheck();
     setTimeout(() => alert('Hai perso, hai sorriso!'));
   }
