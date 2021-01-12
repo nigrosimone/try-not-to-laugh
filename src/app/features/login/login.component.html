@@ -1,2 +1,5 @@
 <mat-progress-spinner *ngIf="loading"></mat-progress-spinner>
-<button (click)="onLogin()" *ngIf="!loading">Login</button>
+<ul>
+    <li><button (click)="onLoginFacebook()" *ngIf="!loading">Login Facebook</button></li>
+    <li><button (click)="onLoginGuest()" *ngIf="!loading">Login Guest</button></li>
+</ul>

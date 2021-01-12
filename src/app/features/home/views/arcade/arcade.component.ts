@@ -3,6 +3,7 @@ import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
 
 let apiLoaded = false;
+const MISSIMG_LIMIT = 50;
 @Component({
   selector: 'app-arcade',
   templateUrl: './arcade.component.html',
@@ -19,6 +20,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public faceHappy = false;
   public loseMatch = false;
   public happy = 0;
+  public readyToGame = false;
 
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
@@ -29,6 +31,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   public loading = false;
+  public firstDetectionHappen = false;
   private stream: MediaStream;
 
   constructor(private cdr: ChangeDetectorRef) { }
@@ -96,7 +99,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
     if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params) {
-      this.faceMissingDetection++;
+      this.faceMissingDetection = MISSIMG_LIMIT;
       return requestAnimationFrame(() => this.onPlay());
     }
 
@@ -105,6 +108,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     // console.log('detectSingleFace', result?.expressions);
 
     if (result) {
+      this.firstDetectionHappen = true;
       // posizioniamo il canvas sul video
       canvas.style.display = 'block';
       const dims = faceapi.matchDimensions(canvas, videoEl, true);
@@ -115,7 +119,11 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.faceMissingDetection = 0;
 
-      this.happy = result.expressions.happy;
+      const happy = result.expressions.happy;
+      if (this.happy !== happy) {
+        this.happy = happy;
+        this.cdr.markForCheck();
+      }
 
       if (this.happy > 0.8) {
         this.loseGame();
@@ -124,6 +132,9 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       canvas.style.display = 'none';
       this.faceMissingDetection++;
+      if (this.firstDetectionHappen) {
+        this.faceMissingDetection++;
+      }
       this.happy = 0;
     }
 
@@ -131,7 +142,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   manageDetectionState(): void {
-    const faceDetected = this.faceMissingDetection < 50;
+    let faceDetected = this.faceMissingDetection < MISSIMG_LIMIT;
+    if (!this.firstDetectionHappen) {
+      faceDetected = false;
+    }
     if (this.faceDetected !== faceDetected) {
       this.faceDetected = faceDetected;
       if (!this.faceDetected) {
@@ -139,6 +153,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.youtube.playVideo();
       }
+      this.manageReadyToGameState();
       this.cdr.markForCheck();
     }
   }
@@ -148,6 +163,15 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loseMatch = true;
       this.video.nativeElement.pause();
       this.youtube.pauseVideo();
+      this.manageReadyToGameState();
+      this.cdr.markForCheck();
+    }
+  }
+
+  manageReadyToGameState(): void {
+    const readyToGame = !this.loseMatch && this.faceDetected;
+    if (this.readyToGame !== readyToGame) {
+      this.readyToGame = !this.loseMatch && this.faceDetected;
       this.cdr.markForCheck();
     }
   }

@@ -36,6 +36,11 @@ export class AuthenticationService {
         return user;
     }
 
+    loginGuest(): User {
+        this.currentUserSubject.next({email: 'guest@guest.it', firstName: 'guest', lastName: 'guest'});
+        return this.currentUserValue;
+    }
+
     login(): void {
         window.location.href = environment.api + 'api/auth/facebook';
     }

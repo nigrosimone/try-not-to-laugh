@@ -33,7 +33,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  onLogin(): void {
+  onLoginFacebook(): void {
     this.authenticationService.login();
+  }
+
+  onLoginGuest(): void {
+    this.authenticationService.loginGuest();
   }
 }
