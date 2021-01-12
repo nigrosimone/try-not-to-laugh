@@ -25,4 +25,8 @@ export class RoutingService {
     homeCameraDetection(): Promise<boolean> {
         return this.route.navigateByUrl(`${this.baseURL}/home/camera-detection`);
     }
+
+    homeArcade(): Promise<boolean> {
+        return this.route.navigateByUrl(`${this.baseURL}/home/arcade`);
+    }
 }

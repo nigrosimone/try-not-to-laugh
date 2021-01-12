@@ -13,4 +13,8 @@ export class HomeComponent {
   onFaceExpressionDetectionTest(): void {
     this.routingService.homeCameraDetection();
   }
+
+  onArcade(): void {
+    this.routingService.homeArcade();
+  }
 }

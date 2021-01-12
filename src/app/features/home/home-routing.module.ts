@@ -10,6 +10,10 @@ const routes: Routes = [
       {
         path: 'camera-detection',
         loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
+      },
+      {
+        path: 'arcade',
+        loadChildren: () => import('./views/arcade/arcade.module').then(m => m.ArcadeModule)
       }
     ]
   }
