@@ -1,5 +1,9 @@
 <mat-progress-spinner *ngIf="loading"></mat-progress-spinner>
-<ul>
-    <li><button (click)="onLoginGuest()" *ngIf="!loading">Login Guest</button></li>
-    <li><button (click)="onLoginFacebook()" *ngIf="!loading">Login Facebook</button></li>
-</ul>
+<mat-selection-list [multiple]="false">
+    <mat-list-option (click)="onLoginGuest()">
+        Login as guest
+    </mat-list-option>
+    <mat-list-option (click)="onLoginFacebook()">
+        Login with Facebook (TEST)
+    </mat-list-option>
+</mat-selection-list>
