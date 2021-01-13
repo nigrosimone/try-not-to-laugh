@@ -1,6 +1,9 @@
-
-<ul>
-    <li><button (click)="onFaceExpressionDetectionTest()">Face expression detection test</button></li>
-    <li><button (click)="onArcade()">Arcade</button></li>
-</ul>
+<mat-selection-list [multiple]="false">
+    <mat-list-option (click)="onArcade()">
+        Arcade game
+    </mat-list-option>
+    <mat-list-option (click)="onFaceExpressionDetectionTest()">
+        Face expression detection (TEST)
+    </mat-list-option>
+</mat-selection-list>
 <router-outlet></router-outlet>
