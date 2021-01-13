@@ -19,6 +19,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public faceDetected = false;
   public faceHappy = false;
   public loseMatch = false;
+  public winMatch = false;
   public happy = 0;
   public readyToGame = false;
 
@@ -57,66 +58,56 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.run();
   }
 
-  onStateChange(e): void {
-    console.log('onStateChange', e);
+  onStateChange(e: YT.OnStateChangeEvent): void {
+    if (e.data === YT.PlayerState.ENDED) {
+      this.winGame();
+    }
   }
 
-  onReady(e): void {
-    console.log('onReady', e);
+  onReady(e: YT.PlayerEvent): void {
     this.run();
   }
 
   async run(): Promise<void> {
-    // carichiamo i modelli ML
-    const baseHref = (document.getElementsByTagName('base')[0] || {}).href;
-    let URI = '/assets/weights/';
-    if (baseHref) {
-      URI = baseHref + URI.substring(1);
-    }
-
     this.loading = true;
     this.cdr.detectChanges();
 
+    // carichiamo i modelli ML
+    const URI = '/assets/weights/';
     await Promise.all([
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
       faceapi.nets.faceRecognitionNet.loadFromUri(URI),
       faceapi.nets.faceExpressionNet.loadFromUri(URI),
     ]);
+    // avviamo lo stream della webcam
+    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+    this.video.nativeElement.srcObject = this.stream;
 
     this.loading = false;
     this.cdr.detectChanges();
-
-    // avviamo lo stream del webcam
-    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    this.video.nativeElement.srcObject = this.stream;
   }
 
-  async onPlay(): Promise<number> {
+  async onPlay(): Promise<void> {
     const videoEl = this.video.nativeElement;
-    const canvas = this.canvas.nativeElement;
+    const timeout = 100;
 
     this.manageDetectionState();
 
-    // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
+    // controlliamo che il video sia in esecuzione, non sia finito e i modelli ML siano caricati
     if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params) {
       this.faceMissingDetection = MISSIMG_LIMIT;
-      return requestAnimationFrame(() => this.onPlay());
+      setTimeout(() => this.onPlay(), timeout);
+      return;
     }
 
     // cerchiamo la faccia nel video
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-    // console.log('detectSingleFace', result?.expressions);
 
+    // faccia trovata?
     if (result) {
+      // almeno una volta l'abbiamo trovata...
       this.firstDetectionHappen = true;
-      // posizioniamo il canvas sul video
-      canvas.style.display = 'block';
-      const dims = faceapi.matchDimensions(canvas, videoEl, true);
-      const resizedResult = faceapi.resizeResults(result, dims);
-      const minConfidence = 0.05;
-      faceapi.draw.drawDetections(canvas, resizedResult);
-      faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
-
+      // resettiamo il conteggio delle volte che non l'abbiamo trovata
       this.faceMissingDetection = 0;
 
       const happy = result.expressions.happy;
@@ -125,29 +116,36 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
       }
 
+      // se la felicità è maggiore di ... ha perso
       if (this.happy > 0.8) {
         this.loseGame();
         return;
       }
     } else {
-      canvas.style.display = 'none';
-      this.faceMissingDetection++;
+      // faccia non trovata...
+      this.happy = 0;
+      // se l'abbiamo trovata almeno una volta, incrementiamo il conteggio delle volte che non l'abbiamo trovata
       if (this.firstDetectionHappen) {
         this.faceMissingDetection++;
       }
-      this.happy = 0;
     }
 
-    requestAnimationFrame(() => this.onPlay());
+    setTimeout(() => this.onPlay(), timeout);
   }
 
+  /**
+   * Gestisce lo stato di ricerca della faccia nello stream video
+   */
   manageDetectionState(): void {
+    // se siamo sotto la soglia del fallimento della ricerca della faccia, assumiamo di averla trovata
     let faceDetected = this.faceMissingDetection < MISSIMG_LIMIT;
+    // se non l'abbiamo trovata almeno una volta, non l'abbiamo trovata
     if (!this.firstDetectionHappen) {
       faceDetected = false;
     }
     if (this.faceDetected !== faceDetected) {
       this.faceDetected = faceDetected;
+      // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube
       if (!this.faceDetected) {
         this.youtube.pauseVideo();
       } else {
@@ -158,20 +156,48 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Termina la partita come persa
+   */
   loseGame(): void {
-    if (this.loseMatch) {
+    // controlliamo se è stata già terminata
+    if (!this.loseMatch) {
+      this.winMatch = false;
       this.loseMatch = true;
+      // mettiamo in pausa il video della webcam
       this.video.nativeElement.pause();
+      // mettiamo in pausa il video di youtube
       this.youtube.pauseVideo();
       this.manageReadyToGameState();
       this.cdr.markForCheck();
     }
   }
 
+  /**
+   * Termina la partita come vinta
+   */
+  winGame(): void {
+    // controlliamo se è stata già terminata
+    if (!this.winMatch) {
+      this.winMatch = true;
+      this.loseMatch = false;
+      // mettiamo in pausa il video della webcam
+      this.video.nativeElement.pause();
+      // mettiamo in pausa il video di youtube
+      this.youtube.stopVideo();
+      this.manageReadyToGameState();
+      this.cdr.markForCheck();
+    }
+  }
+
+  /**
+   * Gestisce lo stato della partita (se è pronta per essere giocata o meno)
+   */
   manageReadyToGameState(): void {
+    // può essere giocata se non è terminata e se abbiamo trovato la faccia
     const readyToGame = !this.loseMatch && this.faceDetected;
     if (this.readyToGame !== readyToGame) {
-      this.readyToGame = !this.loseMatch && this.faceDetected;
+      this.readyToGame = readyToGame;
       this.cdr.markForCheck();
     }
   }
