@@ -1,4 +1,4 @@
-<p *ngIf="user">
-    Benvenuto {{ user.email }} <button (click)="onLogout()">LOGOUT</button>
-</p>
+<mat-toolbar *ngIf="user">
+   <div style="width: 100%; text-align: right; font-size: 12px;">Benvenuto <strong>{{ user.email }}</strong> <button mat-raised-button (click)="onLogout()">Logout</button></div>
+</mat-toolbar>
 <router-outlet></router-outlet>
