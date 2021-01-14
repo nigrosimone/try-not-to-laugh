@@ -8,6 +8,15 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'select-game',
+        pathMatch: 'full'
+      },
+      {
+        path: 'select-game',
+        loadChildren: () => import('./views/select-game/select-game.module').then(m => m.SelectGameModule)
+      },
+      {
         path: 'camera-detection',
         loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
       },

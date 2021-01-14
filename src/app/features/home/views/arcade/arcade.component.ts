@@ -72,6 +72,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading = true;
     this.cdr.detectChanges();
 
+    // avviamo lo stream della webcam
+    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+    this.video.nativeElement.srcObject = this.stream;
+
     // carichiamo i modelli ML
     const URI = '/assets/weights/';
     await Promise.all([
@@ -79,9 +83,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       faceapi.nets.faceRecognitionNet.loadFromUri(URI),
       faceapi.nets.faceExpressionNet.loadFromUri(URI),
     ]);
-    // avviamo lo stream della webcam
-    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    this.video.nativeElement.srcObject = this.stream;
+
 
     this.loading = false;
     this.cdr.detectChanges();
