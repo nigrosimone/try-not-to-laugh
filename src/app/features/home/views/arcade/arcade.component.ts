@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
 
@@ -23,6 +23,9 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public happy = 0;
   public readyToGame = false;
 
+  public width = 100;
+  public height = 100;
+
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
     controls: YT.Controls.Hide,
@@ -31,7 +34,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     rel: YT.RelatedVideos.Hide
   };
 
-  public loading = false;
+  public loading = true;
   public firstDetectionHappen = false;
   private stream: MediaStream;
 
@@ -92,6 +95,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   async onPlay(): Promise<void> {
     const videoEl = this.video.nativeElement;
     const timeout = 100;
+
+    this.onResize();
 
     this.manageDetectionState();
 
@@ -200,6 +205,17 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     const readyToGame = !this.loseMatch && this.faceDetected;
     if (this.readyToGame !== readyToGame) {
       this.readyToGame = readyToGame;
+      this.cdr.markForCheck();
+    }
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    if (w !== this.width || h !== this.height) {
+      this.width = w;
+      this.height = h;
       this.cdr.markForCheck();
     }
   }

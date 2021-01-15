@@ -1,3 +1,10 @@
+<mat-toolbar *ngIf="user">
+    <div style="width: 100%; text-align: right; font-size: 12px;"><button mat-raised-button [matMenuTriggerFor]="menu">{{
+          user.email }}</button></div>
+    <mat-menu #menu="matMenu">
+       <button mat-menu-item (click)="onLogout()">Logout</button>
+    </mat-menu>
+ </mat-toolbar>
 <mat-selection-list [multiple]="false">
     <mat-list-option (click)="onArcade()">
         Arcade game

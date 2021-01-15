@@ -1,16 +1,16 @@
-<mat-spinner *ngIf="loading"></mat-spinner>
-<div [hidden]="loading">
-    <h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
-    <h1 *ngIf="winMatch">Hai vinto, non hai sorriso!</h1>
-    <ul>
-        <li>Felicità: {{ (happy * 100) | number }}%</li>
-    </ul>
-    <div [hidden]="!readyToGame">
-        <youtube-player videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)"
+<mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
+<div [hidden]="loading" class="game-container">
+    <div class="info">
+        <h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
+        <h1 *ngIf="winMatch">Hai vinto, non hai sorriso!</h1>
+        <h1 *ngIf="!faceDetected && !loseMatch && !winMatch">Non riesco a vedere la tua faccia!</h1>
+        <div style="width: 100%;">Felicità: {{ (happy * 100) | number }}%</div>
+    </div>
+    <div class="youtube" [hidden]="!readyToGame">
+        <youtube-player [width]="width" [height]="height" videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)"
             (stateChange)="onStateChange($event)" #youtube></youtube-player>
     </div>
-    <div class="video-container" [hidden]="readyToGame">
-        <video (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
-        <h1 *ngIf="!faceDetected">Non riesco a vedere la tua faccia!</h1>
+    <div class="webcam" [hidden]="readyToGame">
+        <video [width]="width" [height]="height" (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
     </div>
 </div>
