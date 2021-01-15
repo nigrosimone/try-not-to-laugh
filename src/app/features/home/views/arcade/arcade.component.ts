@@ -37,6 +37,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public loading = true;
   public firstDetectionHappen = false;
   private stream: MediaStream;
+  private timeout;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -96,6 +97,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     const videoEl = this.video.nativeElement;
     const timeout = 100;
 
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+
     this.onResize();
 
     this.manageDetectionState();
@@ -103,7 +108,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     // controlliamo che il video sia in esecuzione, non sia finito e i modelli ML siano caricati
     if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params) {
       this.faceMissingDetection = MISSIMG_LIMIT;
-      setTimeout(() => this.onPlay(), timeout);
+      this.timeout = setTimeout(() => this.onPlay(), timeout);
       return;
     }
 
@@ -137,7 +142,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    setTimeout(() => this.onPlay(), timeout);
+    this.timeout = setTimeout(() => this.onPlay(), timeout);
   }
 
   /**
@@ -176,6 +181,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       // mettiamo in pausa il video di youtube
       this.youtube.pauseVideo();
       this.manageReadyToGameState();
+      clearTimeout(this.timeout);
       this.cdr.markForCheck();
     }
   }
