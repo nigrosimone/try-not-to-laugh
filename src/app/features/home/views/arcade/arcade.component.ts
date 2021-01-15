@@ -23,8 +23,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public happy = 0;
   public readyToGame = false;
 
-  public width = 100;
-  public height = 100;
+  public width = window.innerWidth;
+  public height =  window.innerHeight;
 
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
