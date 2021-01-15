@@ -3,7 +3,7 @@ import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
 
 let apiLoaded = false;
-const MISSIMG_LIMIT = 50;
+const MISSIMG_LIMIT = 10;
 @Component({
   selector: 'app-arcade',
   templateUrl: './arcade.component.html',
