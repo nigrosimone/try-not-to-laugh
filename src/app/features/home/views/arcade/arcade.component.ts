@@ -106,7 +106,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.manageDetectionState();
 
     // controlliamo che il video sia in esecuzione, non sia finito e i modelli ML siano caricati
-    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params) {
+    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || !apiLoaded) {
       this.faceMissingDetection = MISSIMG_LIMIT;
       this.timeout = setTimeout(() => this.onPlay(), timeout);
       return;
