@@ -39,7 +39,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   private stream: MediaStream;
   private timeout;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) {
+    const toolbar = document.getElementById('tnl-toolbar');
+    this.height =  window.innerHeight - toolbar.clientHeight;
+   }
 
   ngOnInit(): void {
     if (!apiLoaded) {
