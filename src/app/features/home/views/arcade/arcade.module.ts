@@ -4,6 +4,7 @@ import { ArcadeComponent } from './arcade.component';
 import { ArcadeRoutingModule } from './arcade-routing.module';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {YouTubePlayerModule} from '@angular/youtube-player';
+import { HumanizeTimeModule } from 'src/app/shared/pipe/humanize-time/humanize-time.module';
 
 @NgModule({
   declarations: [ArcadeComponent],
@@ -11,7 +12,8 @@ import {YouTubePlayerModule} from '@angular/youtube-player';
     CommonModule,
     ArcadeRoutingModule,
     MatProgressSpinnerModule,
-    YouTubePlayerModule
+    YouTubePlayerModule,
+    HumanizeTimeModule
   ],
   exports: [
     ArcadeComponent
