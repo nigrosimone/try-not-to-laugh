@@ -5,6 +5,7 @@ import { LoginRoutingModule } from './login-routing.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
+import { DialogAlertModule } from 'src/app/shared/components/dialog-alert/dialog-alert.module';
 @NgModule({
   declarations: [LoginComponent],
   imports: [
@@ -12,7 +13,8 @@ import {MatIconModule} from '@angular/material/icon';
     LoginRoutingModule,
     MatProgressSpinnerModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    DialogAlertModule
   ],
   exports: [
     LoginComponent
