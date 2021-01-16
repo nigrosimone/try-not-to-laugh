@@ -1,9 +1,16 @@
-<mat-progress-spinner *ngIf="loading"></mat-progress-spinner>
-<mat-selection-list [multiple]="false">
-    <mat-list-option (click)="onLoginGuest()">
-        <mat-icon mat-list-icon>perm_identity</mat-icon> Login come ospite
-    </mat-list-option>
-    <mat-list-option (click)="onLoginFacebook()">
-        <mat-icon mat-list-icon>facebook</mat-icon> Login con Facebook (TEST)
-    </mat-list-option>
-</mat-selection-list>
+<div class="spinner" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div [hidden]="loading" style="text-align: center;">
+    <img src="/assets/img/bg.jpg" width="80%">
+    <div style="width: 80%; margin: auto;">
+        <mat-selection-list [multiple]="false">
+            <mat-list-option (click)="onLoginGuest()">
+                <mat-icon mat-list-icon>perm_identity</mat-icon> Login come ospite
+            </mat-list-option>
+            <mat-list-option (click)="onLoginFacebook()">
+                <mat-icon mat-list-icon>facebook</mat-icon> Login con Facebook (TEST)
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+</div>

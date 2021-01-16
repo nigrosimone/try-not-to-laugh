@@ -1,8 +1,13 @@
-<mat-selection-list [multiple]="false">
-    <mat-list-option (click)="onArcade()">
-        <mat-icon  mat-list-icon>tag_faces</mat-icon> Arcade gamed
-    </mat-list-option>
-    <mat-list-option (click)="onFaceExpressionDetectionTest()">
-        <mat-icon  mat-list-icon>api</mat-icon> Face expression detection (TEST)
-    </mat-list-option>
-</mat-selection-list>
+<div style="text-align: center;">
+    <img src="/assets/img/bg.jpg" width="40%">
+    <div style="width: 80%; margin: auto;">
+        <mat-selection-list [multiple]="false">
+            <mat-list-option (click)="onArcade()">
+                <mat-icon mat-list-icon>tag_faces</mat-icon> Arcade game
+            </mat-list-option>
+            <mat-list-option (click)="onFaceExpressionDetectionTest()">
+                <mat-icon mat-list-icon>api</mat-icon> Face expression detection (TEST)
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+</div>
