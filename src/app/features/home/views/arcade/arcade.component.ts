@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
+import * as humanizeDuration from 'humanize-duration';
 
 let apiLoaded = false;
 const MISSIMG_LIMIT = 10;
@@ -22,6 +23,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public winMatch = false;
   public happy = 0;
   public readyToGame = false;
+  public timeElapse: string = null;
 
   public width = window.innerWidth;
   public height =  window.innerHeight;
@@ -144,6 +146,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.faceMissingDetection++;
       }
     }
+
+    this.timeElapse = humanizeDuration(Math.floor(this.youtube.getCurrentTime()));
 
     this.timeout = setTimeout(() => this.onPlay(), timeout);
   }
