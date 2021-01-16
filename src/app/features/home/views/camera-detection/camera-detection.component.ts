@@ -15,11 +15,12 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   public loading = false;
   private stream: MediaStream;
   private toolbar: HTMLElement;
-  public width = window.innerWidth;
-  public height = window.innerHeight;
+  public width = 0;
+  public height = 0;
 
   constructor(private cdr: ChangeDetectorRef) {
     this.toolbar = document.getElementById('tnl-toolbar');
+    this.onResize();
   }
 
   ngOnDestroy(): void {
@@ -84,8 +85,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    const w = window.innerWidth;
-    const h = window.innerHeight - this.toolbar.clientHeight;
+    const w = document.documentElement.clientWidth - 1;
+    const h = document.documentElement.clientHeight - this.toolbar.clientHeight - 1;
 
     if (w !== this.width || h !== this.height) {
       this.width = w;

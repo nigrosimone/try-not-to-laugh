@@ -50,6 +50,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private cdr: ChangeDetectorRef) {
     this.toolbar = document.getElementById('tnl-toolbar');
+    this.onResize();
     this.recordDuration = +localStorage.getItem(`arcade-${this.videoId}-duration`);
   }
 
@@ -243,8 +244,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    const w = window.innerWidth;
-    const h = window.innerHeight - this.toolbar.clientHeight;
+    const w = document.documentElement.clientWidth - 1;
+    const h = document.documentElement.clientHeight - this.toolbar.clientHeight - 1;
 
     if (w !== this.width || h !== this.height) {
       this.width = w;
