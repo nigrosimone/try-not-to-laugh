@@ -7,6 +7,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { DialogAlertModule } from 'src/app/shared/components/dialog-alert/dialog-alert.module';
 @NgModule({
   declarations: [SelectGameComponent],
   imports: [
@@ -16,7 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatToolbarModule,
     MatButtonModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    DialogAlertModule
   ],
   exports: [
     SelectGameComponent

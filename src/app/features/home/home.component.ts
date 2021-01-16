@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
+import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialog-alert.service';
 
 @Component({
   selector: 'app-home',
