@@ -146,7 +146,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.faceMissingDetection++;
       }
     }
-
+    console.log(this.youtube.getCurrentTime());
     this.timeElapse = humanizeDuration(Math.floor(this.youtube.getCurrentTime()));
 
     this.timeout = setTimeout(() => this.onPlay(), timeout);
@@ -164,14 +164,14 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.faceDetected !== faceDetected) {
       this.faceDetected = faceDetected;
-      // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube
-      if (!this.faceDetected) {
-        this.youtube.pauseVideo();
-      } else {
-        this.youtube.playVideo();
-      }
       this.manageReadyToGameState();
       this.cdr.markForCheck();
+    }
+    // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube
+    if (!this.faceDetected) {
+      this.youtube.pauseVideo();
+    } else {
+      this.youtube.playVideo();
     }
   }
 
