@@ -14,6 +14,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   public imgSrc: string;
   public user: User;
   private subUser: Subscription;
+
   constructor(
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
@@ -35,6 +36,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.authenticationService.logout().then(() => {
       this.routingService.root();
     });
+  }
+
+  onHome(): void {
+    this.routingService.home();
   }
 
   ngOnDestroy(): void {
