@@ -15,6 +15,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
 
+  public videoId = 'FFLTU9eIijw';
   public faceMissingDetection = 0;
   public faceDetected = false;
   public faceHappy = false;
@@ -24,6 +25,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public readyToGame = false;
 
   public timeElapse = 0;
+  public recordDuration = 0;
 
   public width = window.innerWidth;
   public height = window.innerHeight;
@@ -44,6 +46,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private cdr: ChangeDetectorRef) {
     this.toolbar = document.getElementById('tnl-toolbar');
+    this.recordDuration = +localStorage.getItem(`arcade-${this.videoId}-duration`);
    }
 
   ngOnInit(): void {
@@ -147,7 +150,11 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    this.timeElapse = Math.floor(this.youtube.getCurrentTime());
+    const timeElapse = Math.floor(this.youtube.getCurrentTime());
+    if ( this.timeElapse !== timeElapse ) {
+      this.timeElapse = timeElapse;
+      localStorage.setItem(`arcade-${this.videoId}-duration`, this.timeElapse.toString());
+    }
 
     this.timeout = setTimeout(() => this.onPlay(), timeout);
   }

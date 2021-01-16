@@ -6,11 +6,12 @@
         <h1 *ngIf="!faceDetected && !loseMatch && !winMatch">Non riesco a vedere la tua faccia!</h1>
         <div class="badge-container" *ngIf="faceDetected || loseMatch || winMatch">
             <span class="badge badge-happy" [style.background]="happy > 0.3 ? 'red' : 'green'">Felicità: {{ (happy * 100) | number:'1.1-1' }}%</span> 
-            <span class="badge badge-duration">Resistenza: {{ (timeElapse * 1000) | humanizeTime }}</span> 
+            <span class="badge badge-duration" [style.background]="timeElapse > recordDuration ? 'green' : 'blue'">Resistenza: {{ (timeElapse * 1000) | humanizeTime }}</span>
+            <span class="badge badge-record-duration" *ngIf="recordDuration">Record: {{ (recordDuration * 1000) | humanizeTime }}</span>
         </div>
     </div>
     <div class="youtube" [hidden]="!readyToGame">
-        <youtube-player [width]="width" [height]="height" videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)"
+        <youtube-player [width]="width" [height]="height" [videoId]="videoId" [playerVars]="playerVars" (ready)="onReady($event)"
             (stateChange)="onStateChange($event)" #youtube></youtube-player>
     </div>
     <div class="webcam" [hidden]="readyToGame">

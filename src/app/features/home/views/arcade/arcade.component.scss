@@ -28,10 +28,15 @@
             .badge-happy {
                 color: white;
             }
-            .badge-duration {
-                background: white; 
-                color: black; 
+            .badge-record-duration, .badge-duration {
                 margin-left: 5px;
+            }
+            .badge-duration {
+                color: white;
+            }
+            .badge-record-duration {
+                background: yellow; 
+                color: black; 
             }
         }
     }
