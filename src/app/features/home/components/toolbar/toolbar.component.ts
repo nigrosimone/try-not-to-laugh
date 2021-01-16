@@ -11,15 +11,22 @@ import { User } from 'src/app/shared/models/user';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
+  public imgSrc: string;
   public user: User;
   private subUser: Subscription;
-  constructor( private authenticationService: AuthenticationService,
-               private cdr: ChangeDetectorRef,
-               private routingService: RoutingService) { }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private cdr: ChangeDetectorRef,
+    private routingService: RoutingService) { }
 
   ngOnInit(): void {
     this.subUser = this.authenticationService.currentUser.subscribe(user => {
       this.user = user;
+      if (this.user.is_guest) {
+        this.imgSrc = '/assets/img/guest.svg';
+      } else {
+        this.imgSrc = `//graph.facebook.com/${this.user.id}/picture?type=small&access_token=${this.user.accessToken}`;
+      }
       this.cdr.markForCheck();
     });
   }

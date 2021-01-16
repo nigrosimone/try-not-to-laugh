@@ -25,7 +25,7 @@ export class AuthenticationService {
         if (!user) {
             try {
                 const result = await this.http.get<{ data: User }>(environment.api + 'api/auth/facebook/profile', { withCredentials: true }).toPromise();
-                this.currentUserSubject.next(result.data);
+                this.currentUserSubject.next({...result.data, is_guest: false});
             } catch (error) {
                 if (error.status !== 401) {
                     throw error;
@@ -37,7 +37,7 @@ export class AuthenticationService {
     }
 
     loginGuest(): User {
-        this.currentUserSubject.next({email: 'guest@guest.it', firstName: 'guest', lastName: 'guest'});
+        this.currentUserSubject.next({email: 'guest@guest.it', firstName: 'guest', lastName: 'guest', id: null, is_guest: true, accessToken: null});
         return this.currentUserValue;
     }
 
