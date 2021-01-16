@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
+import * as humanizeDuration from 'humanize-duration';
 
 let apiLoaded = false;
 const MISSIMG_LIMIT = 10;
@@ -22,10 +23,11 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public winMatch = false;
   public happy = 0;
   public readyToGame = false;
-  private toolbarHeight = document.getElementById('tnl-toolbar').offsetHeight;
+
+  public timeElapse: string = null;
 
   public width = window.innerWidth;
-  public height = window.innerHeight - this.toolbarHeight;
+  public height = window.innerHeight;
 
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
@@ -39,9 +41,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public firstDetectionHappen = false;
   private stream: MediaStream;
   private timeout;
+  private toolbar: HTMLElement;
 
   constructor(private cdr: ChangeDetectorRef) {
-
+    this.toolbar = document.getElementById('tnl-toolbar');
    }
 
   ngOnInit(): void {
@@ -144,6 +147,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
         this.faceMissingDetection++;
       }
     }
+    console.log(this.youtube.getCurrentTime());
+    this.timeElapse = humanizeDuration(Math.floor(this.youtube.getCurrentTime()));
 
     this.timeout = setTimeout(() => this.onPlay(), timeout);
   }
@@ -160,14 +165,14 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.faceDetected !== faceDetected) {
       this.faceDetected = faceDetected;
-      // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube
-      if (!this.faceDetected) {
-        this.youtube.pauseVideo();
-      } else {
-        this.youtube.playVideo();
-      }
       this.manageReadyToGameState();
       this.cdr.markForCheck();
+    }
+    // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube
+    if (!this.faceDetected) {
+      this.youtube.pauseVideo();
+    } else {
+      this.youtube.playVideo();
     }
   }
 
@@ -221,11 +226,11 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   onResize(): void {
     const w = window.innerWidth;
-    const h = window.innerHeight;
-    this.toolbarHeight = document.getElementById('tnl-toolbar').offsetHeight;
+    const h = window.innerHeight - this.toolbar.clientHeight;
+
     if (w !== this.width || h !== this.height) {
       this.width = w;
-      this.height = h - this.toolbarHeight;
+      this.height = h;
       this.cdr.markForCheck();
     }
   }
