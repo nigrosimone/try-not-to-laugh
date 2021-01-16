@@ -4,7 +4,7 @@
         <h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
         <h1 *ngIf="winMatch">Hai vinto, non hai sorriso!</h1>
         <h1 *ngIf="!faceDetected && !loseMatch && !winMatch">Non riesco a vedere la tua faccia!</h1>
-        <div style="width: 100%;" *ngIf="faceDetected || loseMatch || winMatch">Felicità: {{ (happy * 100) | number:'3.2-2' }}%</div>
+        <div style="width: 100%;" *ngIf="faceDetected || loseMatch || winMatch">Felicità: {{ (happy * 100) | number:'1.2-2' }}%</div>
     </div>
     <div class="youtube" [hidden]="!readyToGame">
         <youtube-player [width]="width" [height]="height" videoId="FFLTU9eIijw" [playerVars]="playerVars" (ready)="onReady($event)"
