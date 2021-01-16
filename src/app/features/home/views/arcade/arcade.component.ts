@@ -2,6 +2,8 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, 
 import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
 
+const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
+
 let apiLoaded = false;
 const MISSIMG_LIMIT = 10;
 @Component({
@@ -15,7 +17,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
 
-  public videoId = 'FFLTU9eIijw';
+  public videoId = VIDEOS[Math.floor(Math.random() * VIDEOS.length)]; // un video a caso
   public faceMissingDetection = 0;
   public faceDetected = false;
   public faceHappy = false;
@@ -26,6 +28,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public timeElapse = 0;
   public recordDuration = 0;
+  public seekTo = 0;
 
   public width = window.innerWidth;
   public height = window.innerHeight;
@@ -47,7 +50,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) {
     this.toolbar = document.getElementById('tnl-toolbar');
     this.recordDuration = +localStorage.getItem(`arcade-${this.videoId}-duration`);
-   }
+  }
 
   ngOnInit(): void {
     if (!apiLoaded) {
@@ -77,6 +80,12 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onReady(e: YT.PlayerEvent): void {
+    if (this.recordDuration > 0) {
+      if (this.recordDuration < this.youtube.getDuration()) {
+        this.seekTo = this.recordDuration;
+        this.youtube.seekTo(this.seekTo, true);
+      }
+    }
     this.run();
   }
 
@@ -150,8 +159,8 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    const timeElapse = Math.floor(this.youtube.getCurrentTime());
-    if ( this.timeElapse !== timeElapse ) {
+    const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.seekTo;
+    if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
       localStorage.setItem(`arcade-${this.videoId}-duration`, this.timeElapse.toString());
     }
