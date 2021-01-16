@@ -29,6 +29,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public timeElapse = 0;
   public recordDuration = 0;
   public seekTo = 0;
+  public seekChecked = false;
 
   public width = window.innerWidth;
   public height = window.innerHeight;
@@ -76,16 +77,18 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === YT.PlayerState.ENDED) {
       this.winGame();
+    } else if (e.data === YT.PlayerState.PLAYING) {
+      if ( !this.seekChecked && this.recordDuration > 0) {
+        this.seekChecked = true;
+        if (this.recordDuration < this.youtube.getDuration()) {
+          this.seekTo = this.recordDuration;
+          this.youtube.seekTo(this.seekTo, true);
+        }
+      }
     }
   }
 
   onReady(e: YT.PlayerEvent): void {
-    if (this.recordDuration > 0) {
-      if (this.recordDuration < this.youtube.getDuration()) {
-        this.seekTo = this.recordDuration;
-        this.youtube.seekTo(this.seekTo, true);
-      }
-    }
     this.run();
   }
 
