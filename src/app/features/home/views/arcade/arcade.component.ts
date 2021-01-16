@@ -22,9 +22,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public winMatch = false;
   public happy = 0;
   public readyToGame = false;
+  private toolbarHeight = document.getElementById('tnl-toolbar').offsetHeight;
 
   public width = window.innerWidth;
-  public height =  window.innerHeight;
+  public height = window.innerHeight - this.toolbarHeight;
 
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
@@ -40,8 +41,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   private timeout;
 
   constructor(private cdr: ChangeDetectorRef) {
-    const toolbar = document.getElementById('tnl-toolbar');
-    this.height =  window.innerHeight - toolbar.clientHeight;
+
    }
 
   ngOnInit(): void {
@@ -222,9 +222,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   onResize(): void {
     const w = window.innerWidth;
     const h = window.innerHeight;
+    this.toolbarHeight = document.getElementById('tnl-toolbar').offsetHeight;
     if (w !== this.width || h !== this.height) {
       this.width = w;
-      this.height = h;
+      this.height = h - this.toolbarHeight;
       this.cdr.markForCheck();
     }
   }
