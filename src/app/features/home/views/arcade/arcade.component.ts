@@ -38,10 +38,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public firstDetectionHappen = false;
   private stream: MediaStream;
   private timeout;
+  private toolbar: HTMLElement;
 
   constructor(private cdr: ChangeDetectorRef) {
-    const toolbar = document.getElementById('tnl-toolbar');
-    this.height =  window.innerHeight - toolbar.clientHeight;
+    this.toolbar = document.getElementById('tnl-toolbar');
    }
 
   ngOnInit(): void {
@@ -221,7 +221,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   onResize(): void {
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight - this.toolbar.clientHeight;
     if (w !== this.width || h !== this.height) {
       this.width = w;
       this.height = h;

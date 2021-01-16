@@ -1,5 +1,5 @@
 <mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
-<div [hidden]="loading" class="game-container">
+<div [hidden]="loading" class="game-container" [style.height]="height + 'px'" [style.width]="width + 'px'">
     <div class="info">
         <h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
         <h1 *ngIf="winMatch">Hai vinto, non hai sorriso!</h1>
