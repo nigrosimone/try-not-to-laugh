@@ -7,6 +7,6 @@
         <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale</h1>
     </div>
     <div class="webcam">
-        <app-camera-detection [width]="width" [height]="height" [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
+        <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
     </div>
 </div>
