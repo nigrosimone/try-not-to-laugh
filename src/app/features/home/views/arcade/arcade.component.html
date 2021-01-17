@@ -3,7 +3,7 @@
         <h1 *ngIf="endMatch && loseMatch">Hai perso, hai sorriso!</h1>
         <h1 *ngIf="endMatch && winMatch">Hai vinto, non hai sorriso!</h1>
         <h1 *ngIf="readyToGame && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
-        <div class="badge-container" *ngIf="faceDetected || loseMatch || winMatch">
+        <div class="badge-container" *ngIf="faceDetected || endMatch">
             <span class="badge badge-happy" [style.background]="happy > 0.3 ? 'red' : 'green'">Felicità: {{ (happy * 100) | number:'1.1-1' }}%</span> 
             <span class="badge badge-duration" [style.background]="timeElapse > recordDuration ? 'green' : 'blue'">Resistenza: {{ (timeElapse * 1000) | humanizeTime }}</span>
             <span class="badge badge-record-duration" *ngIf="recordDuration">Record: {{ (recordDuration * 1000) | humanizeTime }}</span>
