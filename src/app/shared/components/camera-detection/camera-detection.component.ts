@@ -40,7 +40,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     this.run();
   }
 
-  async run(): Promise<void> {
+  private async run(): Promise<void> {
     this.loading = true;
     this.cdr.detectChanges();
 
@@ -62,7 +62,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   async onPlay(): Promise<void> {
     const videoEl = this.video.nativeElement;
-    const canvas = this.canvas.nativeElement;
 
     this.onResize();
 
@@ -78,6 +77,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
     if (this.drawDetection) {
+      const canvas = this.canvas.nativeElement;
       if (result) {
         // posizioniamo il canvas sul video
         canvas.style.display = 'block';
@@ -98,7 +98,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   @HostListener('window:resize')
-  onResize(): void {
+  private onResize(): void {
     // -1 altrimenti esce la scrollbar
     const w = this.elRef.nativeElement.clientWidth - 1;
     const h = this.elRef.nativeElement.clientHeight - 1;
@@ -110,10 +110,16 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Mette in pausa la webcam
+   */
   pauseVideo(): void {
     this.video.nativeElement.pause();
   }
 
+  /**
+   * Mette in play la webcam
+   */
   playVideo(): void {
     this.video.nativeElement.pause();
   }
