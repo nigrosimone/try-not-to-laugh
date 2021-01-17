@@ -159,7 +159,7 @@ export class ArcadeComponent {
     }
     // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube,
     // questo perchè il video parte in autoplay la prima volta
-    if (!this.faceDetected) {
+    if (!this.faceDetected || !document.hasFocus()) {
       this.youtube.pauseVideo();
     } else {
       this.youtube.playVideo();
