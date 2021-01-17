@@ -1,11 +1,12 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 
 
 @Component({
   selector: 'app-camera-detection',
   templateUrl: './camera-detection.component.html',
-  styleUrls: ['./camera-detection.component.scss']
+  styleUrls: ['./camera-detection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
@@ -101,7 +102,16 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   @HostListener('window:resize')
-  private onResize(): void {
+  onResize(): void {
+    this.doResize();
+  }
+
+  @HostListener('window:orientationchange')
+  onOrientationChange() {
+    this.doResize();
+  }
+
+  doResize(): void {
     // -1 altrimenti esce la scrollbar
     const w = this.elRef.nativeElement.clientWidth - 1;
     const h = this.elRef.nativeElement.clientHeight - 1;

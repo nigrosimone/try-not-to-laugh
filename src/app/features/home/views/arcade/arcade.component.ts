@@ -26,6 +26,8 @@ export class ArcadeComponent implements OnInit {
   public faceMissingDetection = 0;
   // se true l'espressione facciale è stata trovata almeno una volta
   public firstDetectionHappen = false;
+  // se true il riconoscimento facciale è pronto
+  public detectionReady = false;
 
   // partita terminata
   public endMatch = false;
@@ -71,7 +73,7 @@ export class ArcadeComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private elRef: ElementRef) {
     this.recordDuration = this.getLocasStorageDuration();
-    this.onResize();
+    this.doResize();
   }
 
   ngOnInit(): void {
@@ -103,13 +105,20 @@ export class ArcadeComponent implements OnInit {
     this.youtubeReady = true;
   }
 
+   /**
+   * Evento di caricamento completato del riconoscimento facciale
+   */
+  onDetectionReady(e: boolean){
+    this.detectionReady = true;
+  }
+
   /**
    * Evento di cambiamento del riconoscimento facciale
    */
   onDetectionChanges(e: faceapi.FaceExpressions): void {
 
     // ridimensioniamo l'area di gioco
-    this.onResize();
+    this.doResize();
 
     // se il player di youtube non  è pronto non facciamo nient'altro
     if (!this.youtubeReady) {
@@ -210,6 +219,15 @@ export class ArcadeComponent implements OnInit {
 
   @HostListener('window:resize')
   onResize(): void {
+    this.doResize();
+  }
+
+  @HostListener('window:orientationchange')
+  onOrientationChange() {
+    this.doResize();
+  }
+
+  doResize(): void {
     // -1 altrimenti esce la scrollbar
     const w = this.elRef.nativeElement.clientWidth - 1;
     const h = this.elRef.nativeElement.clientHeight - 1;
