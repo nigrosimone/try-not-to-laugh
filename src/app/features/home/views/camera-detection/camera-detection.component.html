@@ -1,5 +1,0 @@
-<div class="spinner" *ngIf="loading"><mat-spinner></mat-spinner></div>
-<div class="video-container" [hidden]="loading">
-<video (loadedmetadata)="onPlay()" [width]="width" [height]="height" [style.height]="height + 'px'" [style.width]="width + 'px'" autoplay muted playsinline #video></video>
-<canvas #canvas  [style.height]="height + 'px'" [style.width]="width + 'px'"></canvas>
-</div>

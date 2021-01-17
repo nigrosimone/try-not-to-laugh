@@ -1,0 +1,21 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.spinner {
+    margin: auto;
+}
+
+.video-container {
+    position: relative;
+    video,
+    canvas {
+        flex: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}

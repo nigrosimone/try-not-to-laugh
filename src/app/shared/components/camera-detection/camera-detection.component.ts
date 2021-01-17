@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 
 
@@ -12,14 +12,21 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('video', { static: false }) video: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
 
+  @Input() detectionTimer = 0;
+  @Input() drawDetection = false;
+
+  @Output() detectionReady: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() detectionChanges: EventEmitter<faceapi.FaceDetection> = new EventEmitter<faceapi.FaceDetection>();
+
   public loading = false;
-  private stream: MediaStream;
-  private toolbar: HTMLElement;
   public width = 0;
   public height = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    this.toolbar = document.getElementById('tnl-toolbar');
+  private stream: MediaStream;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private elRef: ElementRef) {
     this.onResize();
   }
 
@@ -34,7 +41,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   async run(): Promise<void> {
-
     this.loading = true;
     this.cdr.detectChanges();
 
@@ -54,39 +60,48 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  async onPlay(): Promise<number> {
+  async onPlay(): Promise<void> {
     const videoEl = this.video.nativeElement;
     const canvas = this.canvas.nativeElement;
 
     this.onResize();
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
-    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params) {
-      return requestAnimationFrame(() => this.onPlay());
+    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading) {
+      setTimeout(() => this.onPlay(), this.detectionTimer);
+      return;
     }
+
+    this.detectionReady.emit(true);
 
     // cerchiamo la faccia nel video
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
-    if (result) {
-      // posizioniamo il canvas sul video
-      canvas.style.display = 'block';
-      const dims = faceapi.matchDimensions(canvas, videoEl, true);
-      const resizedResult = faceapi.resizeResults(result, dims);
-      const minConfidence = 0.05;
-      faceapi.draw.drawDetections(canvas, resizedResult);
-      faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
-    } else {
-      canvas.style.display = 'none';
+    if (this.drawDetection) {
+      if (result) {
+        // posizioniamo il canvas sul video
+        canvas.style.display = 'block';
+        const dims = faceapi.matchDimensions(canvas, videoEl, true);
+        const resizedResult = faceapi.resizeResults(result, dims);
+        const minConfidence = 0.05;
+        faceapi.draw.drawDetections(canvas, resizedResult);
+        faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
+
+      } else {
+        canvas.style.display = 'none';
+      }
     }
 
-    requestAnimationFrame(() => this.onPlay());
+    this.detectionChanges.emit(result?.detection);
+
+    setTimeout(() => this.onPlay(), this.detectionTimer);
   }
 
   @HostListener('window:resize')
   onResize(): void {
-    const w = document.documentElement.clientWidth - 1;
-    const h = document.documentElement.clientHeight - this.toolbar.clientHeight - 1;
+    // -1 altrimenti esce la scrollbar
+    const w = this.elRef.nativeElement.clientWidth - 1;
+    const h = this.elRef.nativeElement.clientHeight - 1;
 
     if (w !== this.width || h !== this.height) {
       this.width = w;

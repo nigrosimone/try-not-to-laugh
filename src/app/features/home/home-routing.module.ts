@@ -18,7 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'camera-detection',
-        loadChildren: () => import('./views/camera-detection/camera-detection.module').then(m => m.CameraDetectionModule)
+        loadChildren: () => import('./views/camera-detection-test/camera-detection-test.module').then(m => m.CameraDetectionTestModule)
       },
       {
         path: 'arcade',
