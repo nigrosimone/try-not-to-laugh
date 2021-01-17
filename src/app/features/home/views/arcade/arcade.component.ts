@@ -61,7 +61,7 @@ export class ArcadeComponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private elRef: ElementRef) {
-    this.recordDuration = this.getLocasStorageDuration();
+    this.recordDuration = this.getLocalStorageDuration();
     this.doResize();
   }
 
@@ -134,7 +134,7 @@ export class ArcadeComponent {
     const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.recordDuration;
     if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
-      this.setLocasStorageDuration(this.timeElapse);
+      this.setLocalStorageDuration(this.timeElapse);
     }
 
     this.manageDetectionState();
@@ -220,14 +220,14 @@ export class ArcadeComponent {
   /**
    * Recupera dal localstorage l'ultima durata del video corrente
    */
-  getLocasStorageDuration(): number {
+  getLocalStorageDuration(): number {
     return +localStorage.getItem(`arcade-${this.videoId}-duration`);
   }
 
   /**
    * Setta nel localstorage l'ultima durata del video corrente
    */
-  setLocasStorageDuration(value: number): void {
+  setLocalStorageDuration(value: number): void {
     localStorage.setItem(`arcade-${this.videoId}-duration`, value.toString());
   }
 }
