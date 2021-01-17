@@ -16,7 +16,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   @Input() drawDetection = false;
 
   @Output() detectionReady: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() detectionChanges: EventEmitter<faceapi.FaceDetection> = new EventEmitter<faceapi.FaceDetection>();
+  @Output() detectionChanges: EventEmitter<faceapi.FaceExpressions> = new EventEmitter<faceapi.FaceExpressions>();
 
   public loading = false;
   public width = 0;
@@ -92,7 +92,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this.detectionChanges.emit(result?.detection);
+    this.detectionChanges.emit(result?.expressions);
 
     setTimeout(() => this.onPlay(), this.detectionTimer);
   }
@@ -108,5 +108,13 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       this.height = h;
       this.cdr.markForCheck();
     }
+  }
+
+  pauseVideo(): void {
+    this.video.nativeElement.pause();
+  }
+
+  playVideo(): void {
+    this.video.nativeElement.pause();
   }
 }

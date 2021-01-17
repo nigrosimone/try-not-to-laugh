@@ -5,14 +5,20 @@
     width: 100%;
 }
 
-.spinner {
-    margin: auto;
-}
-
 .game-container {
+    display: flex;
+    flex-direction:column;
+    flex: 1 1 auto;
+
     width: 100%;
     height: 100%;
     overflow: hidden;
+
+    .youtube, .webcam {
+        display: flex;
+        flex-direction:column;
+        flex: 1 1 auto;
+    }
 
     .info {
         width: 100%;

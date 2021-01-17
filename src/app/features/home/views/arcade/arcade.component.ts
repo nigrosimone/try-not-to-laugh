@@ -1,23 +1,23 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 import * as faceapi from 'face-api.js';
+import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
+import { randomItemFromArray } from 'src/app/shared/utils/common';
+import { loadApiScript } from 'src/app/shared/utils/youtube-api';
 
 const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
-
-let apiLoaded = false;
 const MISSIMG_LIMIT = 10;
 @Component({
   selector: 'app-arcade',
   templateUrl: './arcade.component.html',
   styleUrls: ['./arcade.component.scss']
 })
-export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ArcadeComponent implements OnInit {
 
-  @ViewChild('video', { static: false }) video: ElementRef<HTMLVideoElement>;
-  @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
   @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
 
-  public videoId = VIDEOS[Math.floor(Math.random() * VIDEOS.length)]; // un video a caso
+  public videoId = randomItemFromArray<string>(VIDEOS);
   public faceMissingDetection = 0;
   public faceDetected = false;
   public faceHappy = false;
@@ -25,14 +25,15 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   public winMatch = false;
   public happy = 0;
   public readyToGame = false;
+  public youtubeReady = false;
 
   public timeElapse = 0;
   public recordDuration = 0;
   public seekTo = 0;
   public seekChecked = false;
 
-  public width = window.innerWidth;
-  public height = window.innerHeight;
+  public width = 0;
+  public height = 0;
 
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
@@ -44,35 +45,16 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public loading = true;
   public firstDetectionHappen = false;
-  private stream: MediaStream;
-  private timeout;
-  private toolbar: HTMLElement;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    this.toolbar = document.getElementById('tnl-toolbar');
-    this.onResize();
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private elRef: ElementRef) {
     this.recordDuration = +localStorage.getItem(`arcade-${this.videoId}-duration`);
+    this.onResize();
   }
 
   ngOnInit(): void {
-    if (!apiLoaded) {
-      // This code loads the IFrame Player API code asynchronously, according to the instructions at
-      // https://developers.google.com/youtube/iframe_api_reference#Getting_Started
-      const tag = document.createElement('script');
-      tag.src = 'https://www.youtube.com/iframe_api';
-      document.body.appendChild(tag);
-      apiLoaded = true;
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
-    }
-  }
-
-  ngAfterViewInit(): void {
-    // this.run();
+    loadApiScript();
   }
 
   onStateChange(e: YT.OnStateChangeEvent): void {
@@ -90,60 +72,24 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onReady(e: YT.PlayerEvent): void {
-    this.run();
+    this.youtubeReady = true;
   }
 
-  async run(): Promise<void> {
-    this.loading = true;
-    this.cdr.detectChanges();
-
-    // avviamo lo stream della webcam
-    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    this.video.nativeElement.srcObject = this.stream;
-
-    // carichiamo i modelli ML
-    const URI = '/assets/weights/';
-    await Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri(URI),
-      faceapi.nets.faceRecognitionNet.loadFromUri(URI),
-      faceapi.nets.faceExpressionNet.loadFromUri(URI),
-    ]);
-
-
-    this.loading = false;
-    this.cdr.detectChanges();
-  }
-
-  async onPlay(): Promise<void> {
-    const videoEl = this.video.nativeElement;
-    const timeout = 100;
-
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-    }
+  onDetectionChanges(e: faceapi.FaceExpressions): void {
 
     this.onResize();
 
-    this.manageDetectionState();
-
-    // controlliamo che il video sia in esecuzione, non sia finito e i modelli ML siano caricati
-    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || !apiLoaded) {
-      this.faceMissingDetection = MISSIMG_LIMIT;
-      this.timeout = setTimeout(() => this.onPlay(), timeout);
+    if ( !this.youtubeReady ){
       return;
     }
-
-    // cerchiamo la faccia nel video
-    const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-
     // faccia trovata?
-    if (result) {
+    if (e) {
       // almeno una volta l'abbiamo trovata...
       this.firstDetectionHappen = true;
       // resettiamo il conteggio delle volte che non l'abbiamo trovata
       this.faceMissingDetection = 0;
 
-      const happy = result.expressions.happy;
+      const happy = e.happy;
       if (this.happy !== happy) {
         this.happy = happy;
         this.cdr.markForCheck();
@@ -169,7 +115,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.setItem(`arcade-${this.videoId}-duration`, this.timeElapse.toString());
     }
 
-    this.timeout = setTimeout(() => this.onPlay(), timeout);
+    this.manageDetectionState();
   }
 
   /**
@@ -204,11 +150,10 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.winMatch = false;
       this.loseMatch = true;
       // mettiamo in pausa il video della webcam
-      this.video.nativeElement.pause();
+      this.cameraDetection.pauseVideo();
       // mettiamo in pausa il video di youtube
       this.youtube.pauseVideo();
       this.manageReadyToGameState();
-      clearTimeout(this.timeout);
       this.cdr.markForCheck();
     }
   }
@@ -222,7 +167,7 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.winMatch = true;
       this.loseMatch = false;
       // mettiamo in pausa il video della webcam
-      this.video.nativeElement.pause();
+      this.cameraDetection.pauseVideo();
       // mettiamo in pausa il video di youtube
       this.youtube.stopVideo();
       this.manageReadyToGameState();
@@ -244,8 +189,9 @@ export class ArcadeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
-    const w = document.documentElement.clientWidth - 1;
-    const h = document.documentElement.clientHeight - this.toolbar.clientHeight - 1;
+    // -1 altrimenti esce la scrollbar
+    const w = this.elRef.nativeElement.clientWidth - 1;
+    const h = this.elRef.nativeElement.clientHeight - 1;
 
     if (w !== this.width || h !== this.height) {
       this.width = w;

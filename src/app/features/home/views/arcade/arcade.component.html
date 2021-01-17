@@ -1,5 +1,4 @@
-<mat-spinner *ngIf="loading" class="spinner"></mat-spinner>
-<div [hidden]="loading" class="game-container" [style.height]="height + 'px'" [style.width]="width + 'px'">
+<div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
     <div class="info">
         <h1 *ngIf="loseMatch">Hai perso, hai sorriso!</h1>
         <h1 *ngIf="winMatch">Hai vinto, non hai sorriso!</h1>
@@ -10,11 +9,11 @@
             <span class="badge badge-record-duration" *ngIf="recordDuration">Record: {{ (recordDuration * 1000) | humanizeTime }}</span>
         </div>
     </div>
-    <div class="youtube" [hidden]="!readyToGame">
+    <div class="youtube" [style.display]="!readyToGame ? 'none': 'flex'">
         <youtube-player [width]="width" [height]="height" [videoId]="videoId" [playerVars]="playerVars" (ready)="onReady($event)"
             (stateChange)="onStateChange($event)" #youtube></youtube-player>
     </div>
-    <div class="webcam" [hidden]="readyToGame">
-        <video [width]="width" [height]="height" (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
+    <div class="webcam" [style.display]="readyToGame ? 'none': 'flex'">
+        <app-camera-detection [drawDetection]="false" [detectionTimer]="100" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
     </div>
 </div>
