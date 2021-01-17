@@ -28,7 +28,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private elRef: ElementRef) {
-    this.onResize();
+    this.doResize();
   }
 
   ngOnDestroy(): void {
