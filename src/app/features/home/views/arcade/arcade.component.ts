@@ -178,6 +178,8 @@ export class ArcadeComponent {
       this.cameraDetection.pauseVideo();
       // fermiamo il video di youtube
       this.youtube.stopVideo();
+      // facciamo vibrare il cellulare
+      window.navigator.vibrate(200);
       this.manageReadyToGameState();
       this.cdr.markForCheck();
     }
