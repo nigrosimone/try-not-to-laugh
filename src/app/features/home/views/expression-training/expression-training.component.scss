@@ -1,0 +1,62 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.game-container {
+    display: flex;
+    flex-direction:column;
+    flex: 1 1 auto;
+
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .youtube, .webcam {
+        display: flex;
+        flex-direction:column;
+        flex: 1 1 auto;
+    }
+
+    .info {
+        width: 100%;
+        color: black;
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        z-index: 10000;
+
+        h1 {
+            background-color: white;
+            padding: 3px 3px 3px 3px;
+            border-radius: 3px;
+            margin-bottom: 5px;
+            display: inline;
+        }
+
+        .badge-container {
+            width: 100%;
+
+            .badge {
+                padding: 3px 3px 3px 3px;
+                border-radius: 3px;
+                white-space: nowrap;
+            }
+            .badge-happy {
+                color: white;
+            }
+            .badge-record-duration, .badge-duration {
+                margin-left: 5px;
+            }
+            .badge-duration {
+                color: white;
+            }
+            .badge-record-duration {
+                background: yellow; 
+                color: black; 
+            }
+        }
+    }
+}

@@ -29,4 +29,8 @@ export class RoutingService {
     homeArcade(): Promise<boolean> {
         return this.route.navigateByUrl(`${this.baseURL}/home/arcade`);
     }
+
+    homeExpressionTraining(): Promise<boolean> {
+        return this.route.navigateByUrl(`${this.baseURL}/home/expression-training`);
+    }
 }

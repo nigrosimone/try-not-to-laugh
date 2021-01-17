@@ -23,6 +23,10 @@ const routes: Routes = [
       {
         path: 'arcade',
         loadChildren: () => import('./views/arcade/arcade.module').then(m => m.ArcadeModule)
+      },
+      {
+        path: 'expression-training',
+        loadChildren: () => import('./views/expression-training/expression-training.module').then(m => m.ExpressionTrainingModule)
       }
     ]
   }

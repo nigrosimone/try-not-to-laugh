@@ -1,0 +1,12 @@
+<div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
+    <div class="info">
+        <h1 *ngIf="endMatch && loseMatch">Hai perso, dovevi fare una faccia "{{ targetExpression.label }}" invece ne hai fatta una "{{loseExpression.label}}"!</h1>
+        <h1 *ngIf="endMatch && winMatch">Hai vinto!</h1>
+        <h1 *ngIf="detectionReady && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
+        <h1 *ngIf="faceDetected && !endMatch && !neutralRequested">Fai una faccia: {{ targetExpression.label }}</h1>
+        <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale</h1>
+    </div>
+    <div class="webcam">
+        <app-camera-detection [width]="width" [height]="height" [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
+    </div>
+</div>
