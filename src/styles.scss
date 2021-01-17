@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.animation-laugh {
+    animation: laugh 0.5s infinite alternate;
+}
+
+@keyframes laugh {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
