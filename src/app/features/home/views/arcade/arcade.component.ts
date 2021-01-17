@@ -17,25 +17,48 @@ export class ArcadeComponent implements OnInit {
   @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
   @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
 
+  // id del video di youtube
   public videoId = randomItemFromArray<string>(VIDEOS);
-  public faceMissingDetection = 0;
+
+  // true se l'espressione facciale è stata trovata nella webcam
   public faceDetected = false;
-  public faceHappy = false;
-  public loseMatch = false;
-  public winMatch = false;
+  // numero di volte consecutive che l'espressione non è stata trovata
+  public faceMissingDetection = 0;
+  // se true l'espressione facciale è stata trovata almeno una volta
+  public firstDetectionHappen = false;
+
+  // partita terminata
   public endMatch = false;
+  // partita terminata come persa
+  public loseMatch = false;
+  // partita terminata come vinta
+  public winMatch = false;
+
+  // valore di felicità dell'espressione facciale
   public happy = 0;
+
+  // true se la partita può iniziare
   public readyToGame = false;
+
+  // true se il player video di youtube è stato caricato
   public youtubeReady = false;
 
+  // secondi visti del video di youtube
   public timeElapse = 0;
+
+  // massimo di secondi visti del video di youtube
   public recordDuration = 0;
+
+  // da dove è iniziato il video (i video già visti, ripartono da dove sono stati terminati l'ultima volta)
   public seekTo = 0;
+  // se il video non è partito dall'inizion
   public seekChecked = false;
 
+  // dimensioni dell'area di gioco
   public width = 0;
   public height = 0;
 
+  // impostazioni del player di youtube
   public playerVars: YT.PlayerVars = {
     autoplay: YT.AutoPlay.NoAutoPlay,
     controls: YT.Controls.Hide,
@@ -43,9 +66,6 @@ export class ArcadeComponent implements OnInit {
     modestbranding: YT.ModestBranding.Modest,
     rel: YT.RelatedVideos.Hide
   };
-
-  public loading = true;
-  public firstDetectionHappen = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -55,9 +75,13 @@ export class ArcadeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // carichiamo lo script delle API di youtube
     loadYouTubeApiScript();
   }
 
+  /**
+   * Evento di cambiamento di stato del player di YouTube
+   */
   onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === YT.PlayerState.ENDED) {
       this.endGame(true);
@@ -72,17 +96,26 @@ export class ArcadeComponent implements OnInit {
     }
   }
 
+  /**
+   * Evento di caricamento completato del player di YouTube
+   */
   onReady(e: YT.PlayerEvent): void {
     this.youtubeReady = true;
   }
 
+  /**
+   * Evento di cambiamento del riconoscimento facciale
+   */
   onDetectionChanges(e: faceapi.FaceExpressions): void {
 
+    // ridimensioniamo l'area di gioco
     this.onResize();
 
+    // se il player di youtube non  è pronto non facciamo nient'altro
     if (!this.youtubeReady) {
       return;
     }
+
     // faccia trovata?
     if (e) {
       // almeno una volta l'abbiamo trovata...
@@ -188,10 +221,16 @@ export class ArcadeComponent implements OnInit {
     }
   }
 
+  /**
+   * Recupera dal localstorage l'ultima durata del video corrente
+   */
   getLocasStorageDuration(): number {
     return +localStorage.getItem(`arcade-${this.videoId}-duration`);
   }
 
+  /**
+   * Setta nel localstorage l'ultima durata del video corrente
+   */
   setLocasStorageDuration(value: number): void {
     localStorage.setItem(`arcade-${this.videoId}-duration`, value.toString());
   }
