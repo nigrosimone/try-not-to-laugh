@@ -58,5 +58,13 @@
                 color: black; 
             }
         }
+        .retry{
+            //opacity: 0.8;
+            padding-bottom: 2vh;
+            .retry-button {
+                opacity: 0.4;
+                filter: alpha(opacity=40);
+            }
+        }
     }
 }

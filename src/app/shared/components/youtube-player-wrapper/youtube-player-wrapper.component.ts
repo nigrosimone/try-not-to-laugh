@@ -73,6 +73,7 @@ export class YoutubePlayerWrapperComponent implements OnInit {
     this.youtube.stopVideo();
   }
 
+  
   /**
    * Torna i secondi visualizzati del video
    */

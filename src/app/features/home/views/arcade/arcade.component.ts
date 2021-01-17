@@ -5,6 +5,7 @@ import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
+import { loadYouTubeApiScript } from 'src/app/shared/utils/youtube-api';
 
 
 const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
@@ -205,6 +206,14 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       this.manageReadyToGameState();
       this.cdr.markForCheck();
     }
+  }
+
+  restartGame(): void {
+      this.endMatch = false;
+      // riavviamo il video della webcam
+      this.cameraDetection.playVideo();
+      this.manageReadyToGameState();
+      this.cdr.markForCheck();
   }
 
   /**
