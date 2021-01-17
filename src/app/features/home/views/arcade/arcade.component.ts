@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { YouTubePlayer } from '@angular/youtube-player';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
+import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray } from 'src/app/shared/utils/common';
-import { loadYouTubeApiScript } from 'src/app/shared/utils/youtube-api';
+
 
 const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
 const MISSIMG_LIMIT = 10;
@@ -12,10 +12,10 @@ const MISSIMG_LIMIT = 10;
   templateUrl: './arcade.component.html',
   styleUrls: ['./arcade.component.scss']
 })
-export class ArcadeComponent implements OnInit {
+export class ArcadeComponent {
 
   @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
-  @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
+  @ViewChild('youtube', { static: false }) youtube: YoutubePlayerWrapperComponent;
 
   // id del video di youtube
   public videoId = randomItemFromArray<string>(VIDEOS);
@@ -28,6 +28,9 @@ export class ArcadeComponent implements OnInit {
   public firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
   public detectionReady = false;
+
+  // se true youtube e il riconoscimento facciale sono pronti
+  public allReady = false;
 
   // partita terminata
   public endMatch = false;
@@ -51,23 +54,9 @@ export class ArcadeComponent implements OnInit {
   // massimo di secondi visti del video di youtube
   public recordDuration = 0;
 
-  // da dove è iniziato il video (i video già visti, ripartono da dove sono stati terminati l'ultima volta)
-  public seekTo = 0;
-  // se il video non è partito dall'inizion
-  public seekChecked = false;
-
   // dimensioni dell'area di gioco
   public width = 0;
   public height = 0;
-
-  // impostazioni del player di youtube
-  public playerVars: YT.PlayerVars = {
-    autoplay: YT.AutoPlay.NoAutoPlay,
-    controls: YT.Controls.Hide,
-    showinfo: YT.ShowInfo.Hide,
-    modestbranding: YT.ModestBranding.Modest,
-    rel: YT.RelatedVideos.Hide
-  };
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -76,25 +65,12 @@ export class ArcadeComponent implements OnInit {
     this.doResize();
   }
 
-  ngOnInit(): void {
-    // carichiamo lo script delle API di youtube
-    loadYouTubeApiScript();
-  }
-
   /**
    * Evento di cambiamento di stato del player di YouTube
    */
   onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === YT.PlayerState.ENDED) {
       this.endGame(true);
-    } else if (e.data === YT.PlayerState.PLAYING) {
-      if (!this.seekChecked && this.recordDuration > 0) {
-        this.seekChecked = true;
-        if (this.recordDuration < this.youtube.getDuration()) {
-          this.seekTo = this.recordDuration;
-          this.youtube.seekTo(this.seekTo, true);
-        }
-      }
     }
   }
 
@@ -103,13 +79,15 @@ export class ArcadeComponent implements OnInit {
    */
   onReady(e: YT.PlayerEvent): void {
     this.youtubeReady = true;
+    this.allReady = this.youtubeReady && this.detectionReady;
   }
 
-   /**
+  /**
    * Evento di caricamento completato del riconoscimento facciale
    */
-  onDetectionReady(e: boolean){
+  onDetectionReady(e: boolean): void {
     this.detectionReady = true;
+    this.allReady = this.youtubeReady && this.detectionReady;
   }
 
   /**
@@ -153,7 +131,7 @@ export class ArcadeComponent implements OnInit {
     }
 
     // recuperiamo il tempo di esecuzione del video di youtube
-    const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.seekTo;
+    const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.recordDuration;
     if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
       this.setLocasStorageDuration(this.timeElapse);
@@ -223,7 +201,7 @@ export class ArcadeComponent implements OnInit {
   }
 
   @HostListener('window:orientationchange')
-  onOrientationChange() {
+  onOrientationChange(): void {
     this.doResize();
   }
 

@@ -107,7 +107,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   @HostListener('window:orientationchange')
-  onOrientationChange() {
+  onOrientationChange(): void {
     this.doResize();
   }
 
@@ -134,6 +134,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
    * Mette in play la webcam
    */
   playVideo(): void {
-    this.video.nativeElement.pause();
+    this.video.nativeElement.play();
   }
 }
