@@ -1,4 +1,8 @@
-export function loadApiScript(): void {
+
+/**
+ * Carica lo script per le API del player di YouTube
+ */
+export function loadYouTubeApiScript(): void {
     const ID = 'YOUTUBE_API_SCRIPT';
     let el = document.getElementById(ID) as HTMLScriptElement;
     if (!el) {
