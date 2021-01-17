@@ -13,10 +13,10 @@ interface Expression {
 const EXPRESSIONS: Array<Expression> = [
   { expression: 'happy', label: 'felice' },
   { expression: 'sad', label: 'triste' },
-  { expression: 'angry', label: 'arrabbiato' },
-  { expression: 'fearful', label: 'spaventato' },
-  { expression: 'disgusted', label: 'disgustato' },
-  { expression: 'surprised', label: 'sorpreso' }
+  { expression: 'angry', label: 'arrabbiata' },
+  { expression: 'fearful', label: 'spaventata' },
+  { expression: 'disgusted', label: 'disgustata' },
+  { expression: 'surprised', label: 'sorpresa' }
 ];
 
 const MISSIMG_LIMIT = 10;
