@@ -4,7 +4,7 @@ import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialo
 
 const DIALOG_DESC_ARCADE = 'In questa DEMO vedrai un video divertente, cerca di non ridere!';
 const DIALOG_DESC_FACEDETECTION = 'In questa DEMO puoi TESTARE il riconoscimento delle espressioni facciali';
-const DIALOG_DESC_EXPRESSIONTRAINING = 'In questa DEMO ti sarà chiesto di fare espressioni felici o arrabiate in modo random, non sbagliare!';
+const DIALOG_DESC_EXPRESSIONTRAINING = 'In questa DEMO ti sarà chiesto di fare espressioni di un certo tipo in modo random, non sbagliare!';
 @Component({
   selector: 'app-select-game',
   templateUrl: './select-game.component.html',
