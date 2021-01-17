@@ -1,3 +1,4 @@
+import { Subscription } from "rxjs";
 
 
 /**
@@ -5,4 +6,13 @@
  */
 export function randomItemFromArray<T>(value: Array<T>): T {
     return value[Math.floor(Math.random() * value.length)];
+}
+
+/**
+ * Disiscrive una sottoscrizione se esiste
+ */
+export function safeUnsubscribe(subscription: Subscription): void {
+    if (subscription) {
+        subscription.unsubscribe();
+    }
 }

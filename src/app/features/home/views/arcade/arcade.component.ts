@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
+import { Subscription } from 'rxjs';
+import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
-import { randomItemFromArray } from 'src/app/shared/utils/common';
+import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
 
 
 const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
@@ -12,7 +14,7 @@ const MISSIMG_LIMIT = 10;
   templateUrl: './arcade.component.html',
   styleUrls: ['./arcade.component.scss']
 })
-export class ArcadeComponent {
+export class ArcadeComponent implements OnInit, OnDestroy {
 
   @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
   @ViewChild('youtube', { static: false }) youtube: YoutubePlayerWrapperComponent;
@@ -58,11 +60,23 @@ export class ArcadeComponent {
   public width = 0;
   public height = 0;
 
+  private subVwChanges: Subscription;
+
   constructor(
     private cdr: ChangeDetectorRef,
+    private windowService: WindowService,
     private elRef: ElementRef) {
     this.recordDuration = this.getLocalStorageDuration();
-    this.doResize();
+  }
+
+  ngOnInit(): void {
+    this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
+      this.doResize();
+    });
+  }
+
+  ngOnDestroy(): void {
+    safeUnsubscribe(this.subVwChanges);
   }
 
   /**
@@ -77,9 +91,9 @@ export class ArcadeComponent {
   /**
    * Evento di caricamento completato del player di YouTube
    */
-  onReady(e: YT.PlayerEvent): void {
+  onYoutubeReady(e: YT.PlayerEvent): void {
     this.youtubeReady = true;
-    this.allReady = this.youtubeReady && this.detectionReady;
+    this.doThirdPartyOnReady();
   }
 
   /**
@@ -87,7 +101,15 @@ export class ArcadeComponent {
    */
   onDetectionReady(e: boolean): void {
     this.detectionReady = true;
+    this.doThirdPartyOnReady();
+  }
+
+  /**
+   * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
+   */
+  doThirdPartyOnReady(): void {
     this.allReady = this.youtubeReady && this.detectionReady;
+    this.doResize();
   }
 
   /**
@@ -195,16 +217,6 @@ export class ArcadeComponent {
       this.readyToGame = readyToGame;
       this.cdr.markForCheck();
     }
-  }
-
-  @HostListener('window:resize')
-  onResize(): void {
-    this.doResize();
-  }
-
-  @HostListener('window:orientationchange')
-  onOrientationChange(): void {
-    this.doResize();
   }
 
   doResize(): void {

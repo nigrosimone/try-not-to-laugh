@@ -10,10 +10,10 @@
         </div>
     </div>
     <div class="youtube" [style.display]="!readyToGame ? 'none': 'flex'">
-        <app-youtube-player-wrapper [width]="width" [height]="height" [videoId]="videoId" [seek]="recordDuration" (ready)="onReady($event)"
+        <app-youtube-player-wrapper [width]="width" [height]="height" [videoId]="videoId" [seek]="recordDuration" (ready)="onYoutubeReady($event)"
         (stateChange)="onStateChange($event)" #youtube></app-youtube-player-wrapper>
     </div>
     <div class="webcam" [style.display]="readyToGame ? 'none': 'flex'">
-        <app-camera-detection [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
+        <app-camera-detection [width]="width" [height]="height" [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
     </div>
 </div>
