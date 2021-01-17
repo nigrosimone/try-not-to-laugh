@@ -71,7 +71,6 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
-      console.log('viewPortChanges');
       this.doResize();
     });
   }
