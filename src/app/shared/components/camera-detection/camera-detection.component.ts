@@ -71,27 +71,30 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
+    // webcam e riconoscimento pronti
     this.detectionReady.emit(true);
 
-    // cerchiamo la faccia nel video
+    // cerchiamo l'espressione della faccia nel video della webcam
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
+    // se vogliamo disegnare sul canvas il feedback del riconoscimento
     if (this.drawDetection) {
       const canvas = this.canvas.nativeElement;
       if (result) {
-        // posizioniamo il canvas sul video
+        // visualizziamo il canvas e posizioniamolo sul video
         canvas.style.display = 'block';
         const dims = faceapi.matchDimensions(canvas, videoEl, true);
         const resizedResult = faceapi.resizeResults(result, dims);
         const minConfidence = 0.05;
         faceapi.draw.drawDetections(canvas, resizedResult);
         faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
-
       } else {
+        // nascondiamo il canvas
         canvas.style.display = 'none';
       }
     }
 
+    // diamo in output i dati sul riconoscimento
     this.detectionChanges.emit(result?.expressions);
 
     setTimeout(() => this.onPlay(), this.detectionTimer);
