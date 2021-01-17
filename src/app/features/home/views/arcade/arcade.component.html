@@ -1,6 +1,6 @@
 <div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
     <div class="info">
-        <div *ngIf="endMatch" class="retry"><button class="retry-button" (click)=restartGame()><h1>RIPROVA</h1></button></div>
+        <div *ngIf="endMatch" class="retry"><button class="retry-button" (click)="restartGame()"><h1>RIPROVA</h1></button></div>
         <h1 *ngIf="endMatch && loseMatch">Hai perso, hai sorriso!</h1>
         <h1 *ngIf="endMatch && winMatch">Hai vinto, non hai sorriso!</h1>
         <h1 *ngIf="detectionReady && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
