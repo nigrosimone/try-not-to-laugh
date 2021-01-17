@@ -4,7 +4,7 @@
         <h1 *ngIf="endMatch && winMatch">Hai vinto!</h1>
         <h1 *ngIf="detectionReady && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
         <h1 *ngIf="faceDetected && !endMatch && !neutralRequested">Fai una faccia: {{ targetExpression.label }}</h1>
-        <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale</h1>
+        <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale per una nuova sfida</h1>
     </div>
     <div class="webcam">
         <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>
