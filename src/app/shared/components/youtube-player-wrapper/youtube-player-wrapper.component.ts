@@ -22,6 +22,7 @@ export class YoutubePlayerWrapperComponent implements OnInit {
   @Output() ready: EventEmitter<YT.PlayerEvent> = new EventEmitter<YT.PlayerEvent>();
 
   private seekChecked = false;
+  private seekApplied = false;
 
   // impostazioni del player di youtube
   public playerVars: YT.PlayerVars = {
@@ -42,10 +43,11 @@ export class YoutubePlayerWrapperComponent implements OnInit {
    */
   onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === YT.PlayerState.PLAYING) {
-      if (!this.seekChecked && this.seek > 0) {
+      if (!this.seekApplied && !this.seekChecked && this.seek > 0) {
         this.seekChecked = true;
         if (this.seek < this.youtube.getDuration()) {
           this.youtube.seekTo(this.seek, true);
+          this.seekApplied = true;
         }
       }
     }
@@ -73,11 +75,28 @@ export class YoutubePlayerWrapperComponent implements OnInit {
     this.youtube.stopVideo();
   }
 
-  
   /**
    * Torna i secondi visualizzati del video
    */
   getCurrentTime(): number {
     return this.youtube.getCurrentTime();
+  }
+
+  /**
+   * Torna i secondi visualizzati del video come intero
+   */
+  getCurrentTimeInt(): number {
+    return Math.floor(this.getCurrentTime());
+  }
+
+  /**
+   * Torna i secondi visualizzati del video come intero meno i secondi del seek
+   */
+  getCurrentTimeIntSeeked(): number {
+    let time = this.getCurrentTimeInt();
+    if (this.seekApplied) {
+      time = time - this.seek;
+    }
+    return time;
   }
 }
