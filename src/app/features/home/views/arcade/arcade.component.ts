@@ -157,7 +157,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.recordDuration;
     if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
-      this.setLocalStorageDuration(this.timeElapse);
+      this.setLocalStorageDuration(this.timeElapse + this.recordDuration);
     }
 
     this.manageDetectionState();

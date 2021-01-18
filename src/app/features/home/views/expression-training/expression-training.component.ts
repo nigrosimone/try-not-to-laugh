@@ -114,11 +114,11 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       let foundTargetExpression = null;
       let foundNonTargetExpression = null;
       for (const ex of EXPRESSIONS) {
-        const value: number = e[ex.expression] as number;
-        if (value > 0.8) {
-          if (ex.expression === this.targetExpression.expression) {
+        if (ex.expression === this.targetExpression.expression) {
+          const value: number = e[ex.expression] as number;
+          if (value > 0.5) {
             foundTargetExpression = ex;
-          } else {
+          } else if (value > 0.8){
             foundNonTargetExpression = ex;
           }
         }
@@ -136,7 +136,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
         this.neutralRequested = true;
       } else {
         // se è richiesta una espressione neutrale e l'utente la fa
-        if (this.neutralRequested && e.neutral > 0.8) {
+        if (this.neutralRequested && e.neutral > 0.5) {
           this.targetExpression = randomItemFromArray<Expression>(EXPRESSIONS);
           this.neutralRequested = false;
         }
