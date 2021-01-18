@@ -153,10 +153,9 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     }
 
     // recuperiamo il tempo di esecuzione del video di youtube
-    const timeElapse = Math.floor(this.youtube.getCurrentTime()) - this.recordDuration;
+    const timeElapse = this.youtube.getCurrentTimeIntSeeked();
     if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
-      this.setLocalStorageDuration(this.timeElapse + this.recordDuration);
     }
 
     this.manageDetectionState();
@@ -192,6 +191,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       window.navigator.vibrate(200);
       this.manageReadyToGameState();
       this.cdr.markForCheck();
+      this.setLocalStorageDuration(this.timeElapse);
     }
   }
 
@@ -200,6 +200,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       // riavviamo il video della webcam
       this.cameraDetection.playVideo();
       this.manageReadyToGameState();
+      this.recordDuration = this.getLocalStorageDuration();
       this.cdr.markForCheck();
   }
 
