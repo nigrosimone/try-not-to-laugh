@@ -120,11 +120,13 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       let foundTargetExpression = null;
       let foundNonTargetExpression = null;
       for (const ex of EXPRESSIONS) {
+        const value: number = e[ex.expression] as number;
         if (ex.expression === this.targetExpression.expression) {
-          const value: number = e[ex.expression] as number;
           if (value > 0.5) {
             foundTargetExpression = ex;
-          } else if (value > 0.8) {
+          }
+        } else {
+          if (value > 0.8) {
             foundNonTargetExpression = ex;
           }
         }
