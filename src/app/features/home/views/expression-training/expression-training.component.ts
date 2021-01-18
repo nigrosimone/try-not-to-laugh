@@ -151,7 +151,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
         this.neutralRequested = true;
       } else {
         // se è richiesta una espressione neutrale e l'utente la fa
-        if (this.neutralRequested && e.neutral > 0.4) {
+        if (this.neutralRequested && e.neutral > 0.6) {
           this.targetExpression = randomItemFromArray<Expression>(EXPRESSIONS);
           this.neutralRequested = false;
         }
