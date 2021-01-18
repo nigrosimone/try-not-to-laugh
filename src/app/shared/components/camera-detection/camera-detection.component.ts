@@ -30,12 +30,13 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   private stream: MediaStream;
 
   // true se l'espressione facciale è stata trovata nella webcam
-  public faceDetected = false;
+  private faceDetected = false;
   // numero di volte consecutive che l'espressione non è stata trovata
-  public faceMissingDetection = 0;
+  private faceMissingDetection = 0;
   // se true l'espressione facciale è stata trovata almeno una volta
-  public firstDetectionHappen = false;
+  private firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
+  private faceDetectionReady = false;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -79,7 +80,11 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     }
 
     // webcam e riconoscimento pronti
-    this.detectionReady.emit(true);
+    if (!this.faceDetectionReady) {
+      this.faceDetectionReady = true;
+      this.detectionReady.emit(this.faceDetectionReady);
+    }
+
 
     // cerchiamo l'espressione della faccia nel video della webcam
     const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
