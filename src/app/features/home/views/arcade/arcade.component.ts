@@ -5,11 +5,8 @@ import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
-import { loadYouTubeApiScript } from 'src/app/shared/utils/youtube-api';
-
 
 const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
-const MISSIMG_LIMIT = 10;
 @Component({
   selector: 'app-arcade',
   templateUrl: './arcade.component.html',
@@ -25,8 +22,6 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
   // true se l'espressione facciale è stata trovata nella webcam
   public faceDetected = false;
-  // numero di volte consecutive che l'espressione non è stata trovata
-  public faceMissingDetection = 0;
   // se true l'espressione facciale è stata trovata almeno una volta
   public firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
@@ -114,6 +109,20 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Evento scatenato al primo riconoscimento facciale
+   */
+  onFirstDetection(e: boolean): void {
+    this.firstDetectionHappen = e;
+  }
+
+  /**
+   * Evento ad ogni cambiamento di stato (trovata/non trovata la faccia)
+   */
+  onDetectionFace(e: boolean): void {
+    this.faceDetected = e;
+  }
+
+  /**
    * Evento di cambiamento del riconoscimento facciale
    */
   onDetectionChanges(e: faceapi.FaceExpressions): void {
@@ -128,17 +137,11 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
     // faccia trovata?
     if (e) {
-      // almeno una volta l'abbiamo trovata...
-      this.firstDetectionHappen = true;
-      // resettiamo il conteggio delle volte che non l'abbiamo trovata
-      this.faceMissingDetection = 0;
-
       const happy = e.happy;
       if (this.happy !== happy) {
         this.happy = happy;
         this.cdr.markForCheck();
       }
-
       // se la felicità è maggiore di ... ha perso
       if (this.happy > 0.8) {
         this.endGame(false);
@@ -147,10 +150,6 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     } else {
       // faccia non trovata...
       this.happy = 0;
-      // se l'abbiamo trovata almeno una volta, incrementiamo il conteggio delle volte che non l'abbiamo trovata
-      if (this.firstDetectionHappen) {
-        this.faceMissingDetection++;
-      }
     }
 
     // recuperiamo il tempo di esecuzione del video di youtube
@@ -167,19 +166,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Gestisce lo stato di ricerca della faccia nello stream video
    */
   manageDetectionState(): void {
-    // se siamo sotto la soglia del fallimento della ricerca della faccia, assumiamo di averla trovata
-    // NB: capita che il riconoscimento fallisca su qualche fotogramma, quindi diamo una tolleranza
-    // di MISSIMG_LIMIT tentativi
-    let faceDetected = this.faceMissingDetection < MISSIMG_LIMIT;
-    // se non l'abbiamo trovata almeno una volta, non l'abbiamo trovata a prescindere dai tentativi fatti
-    if (!this.firstDetectionHappen) {
-      faceDetected = false;
-    }
-    if (this.faceDetected !== faceDetected) {
-      this.faceDetected = faceDetected;
-      this.manageReadyToGameState();
-      this.cdr.markForCheck();
-    }
+    this.manageReadyToGameState();
     // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube,
     // questo perchè il video parte in autoplay la prima volta
     if (!this.faceDetected || !document.hasFocus()) {

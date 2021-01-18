@@ -18,8 +18,6 @@ const EXPRESSIONS: Array<Expression> = [
   { expression: 'disgusted', label: 'disgustata' },
   { expression: 'surprised', label: 'sorpresa' }
 ];
-
-const MISSIMG_LIMIT = 10;
 @Component({
   selector: 'app-expression-training',
   templateUrl: './expression-training.component.html',
@@ -38,8 +36,6 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
 
   // true se l'espressione facciale è stata trovata nella webcam
   public faceDetected = false;
-  // numero di volte consecutive che l'espressione non è stata trovata
-  public faceMissingDetection = 0;
   // se true l'espressione facciale è stata trovata almeno una volta
   public firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
@@ -95,6 +91,20 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Evento scatenato al primo riconoscimento facciale
+   */
+  onFirstDetection(e: boolean): void {
+    this.firstDetectionHappen = e;
+  }
+
+  /**
+   * Evento ad ogni cambiamento di stato (trovata/non trovata la faccia)
+   */
+  onDetectionFace(e: boolean): void {
+    this.faceDetected = e;
+  }
+
+  /**
    * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
    */
   doThirdPartyOnReady(): void {
@@ -112,10 +122,6 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
 
     // faccia trovata?
     if (e) {
-      // almeno una volta l'abbiamo trovata...
-      this.firstDetectionHappen = true;
-      // resettiamo il conteggio delle volte che non l'abbiamo trovata
-      this.faceMissingDetection = 0;
 
       let foundTargetExpression = null;
       let foundNonTargetExpression = null;
@@ -156,33 +162,9 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
           this.neutralRequested = false;
         }
       }
-    } else {
-      // se l'abbiamo trovata almeno una volta, incrementiamo il conteggio delle volte che non l'abbiamo trovata
-      if (this.firstDetectionHappen) {
-        this.faceMissingDetection++;
-      }
     }
 
-    this.manageDetectionState();
-  }
-
-  /**
-   * Gestisce lo stato di ricerca della faccia nello stream video
-   */
-  manageDetectionState(): void {
-    // se siamo sotto la soglia del fallimento della ricerca della faccia, assumiamo di averla trovata
-    // NB: capita che il riconoscimento fallisca su qualche fotogramma, quindi diamo una tolleranza
-    // di MISSIMG_LIMIT tentativi
-    let faceDetected = this.faceMissingDetection < MISSIMG_LIMIT;
-    // se non l'abbiamo trovata almeno una volta, non l'abbiamo trovata a prescindere dai tentativi fatti
-    if (!this.firstDetectionHappen) {
-      faceDetected = false;
-    }
-    if (this.faceDetected !== faceDetected) {
-      this.faceDetected = faceDetected;
-      this.manageReadyToGameState();
-      this.cdr.markForCheck();
-    }
+    this.manageReadyToGameState();
   }
 
   /**
