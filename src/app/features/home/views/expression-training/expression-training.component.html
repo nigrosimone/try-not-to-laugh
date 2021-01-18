@@ -5,6 +5,10 @@
         <h1 *ngIf="detectionReady && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
         <h1 *ngIf="faceDetected && !endMatch && !neutralRequested">Fai una faccia: {{ targetExpression.label }}</h1>
         <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale per una nuova sfida</h1>
+        <div class="badge-container" *ngIf="faceDetected || endMatch">
+            <span class="badge badge-duration" [style.background]="matchDuration > recordDuration ? 'green' : 'blue'">Espressioni: {{ matchDuration }}</span>
+            <span class="badge badge-record-duration" *ngIf="recordDuration">Record: {{ recordDuration }}</span>
+        </div>
     </div>
     <div class="webcam">
         <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" #cameraDetection></app-camera-detection>

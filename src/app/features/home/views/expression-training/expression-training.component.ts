@@ -62,12 +62,18 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   public width = 0;
   public height = 0;
 
+  // record di espressioni indovinate
+  public recordDuration = 0;
+  // numero di espressioni indovinate
+  public matchDuration = 0;
+
   private subVwChanges: Subscription;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private windowService: WindowService,
     private elRef: ElementRef) {
+    this.recordDuration = this.getLocalStorageDuration();
   }
 
   ngOnInit(): void {
@@ -118,7 +124,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
           const value: number = e[ex.expression] as number;
           if (value > 0.5) {
             foundTargetExpression = ex;
-          } else if (value > 0.8){
+          } else if (value > 0.8) {
             foundNonTargetExpression = ex;
           }
         }
@@ -132,6 +138,12 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
 
       // se l'espressione è maggiore di ... genreriamo una nuova epressione
       if (foundTargetExpression) {
+        if (!this.neutralRequested) {
+          this.matchDuration++;
+          if (this.matchDuration > this.recordDuration) {
+            this.setLocalStorageDuration(this.matchDuration);
+          }
+        }
         // l'utente deve tornare con una espressione neutra
         this.neutralRequested = true;
       } else {
@@ -209,5 +221,19 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       this.height = h;
       this.cdr.markForCheck();
     }
+  }
+
+  /**
+   * Recupera dal localstorage il record di espressioni indovinate
+   */
+  getLocalStorageDuration(): number {
+    return +localStorage.getItem(`expression-training-duration`);
+  }
+
+  /**
+   * Setta nel localstorage il record di espressioni indovinate
+   */
+  setLocalStorageDuration(value: number): void {
+    localStorage.setItem(`expression-training-duration`, value.toString());
   }
 }
