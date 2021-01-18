@@ -126,7 +126,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
             foundTargetExpression = ex;
           }
         } else {
-          if (value > 0.9) {
+          if (value > 0.94) {
             foundNonTargetExpression = ex;
           }
         }
