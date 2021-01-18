@@ -3,7 +3,7 @@ import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
-import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
+import { beep, randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
 
 interface Expression {
   expression: keyof Omit<faceapi.FaceExpressions, 'neutral'>;
@@ -141,6 +141,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       // se l'espressione è maggiore di ... genreriamo una nuova epressione
       if (foundTargetExpression) {
         if (!this.neutralRequested) {
+          beep();
           this.matchDuration++;
           if (this.matchDuration > this.recordDuration) {
             this.setLocalStorageDuration(this.matchDuration);
