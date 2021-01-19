@@ -62,7 +62,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private windowService: WindowService,
     private elRef: ElementRef) {
-    this.recordDuration = this.getLocalStorageDuration();
+    this.recordDuration = this.getRecordStorageDuration();
   }
 
   ngOnInit(): void {
@@ -200,7 +200,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       // riavviamo il video della webcam
       this.cameraDetection.playVideo();
       this.manageReadyToGameState();
-      this.recordDuration = this.getLocalStorageDuration();
+      this.recordDuration = this.getRecordStorageDuration();
       this.cdr.markForCheck();
   }
 
@@ -239,9 +239,23 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Setta nel localstorage l'ultima durata del video corrente
    */
   setLocalStorageDuration(value: number): void {
-    const key = `arcade-${this.videoId}-duration`;
+    localStorage.setItem(`arcade-${this.videoId}-duration`, value.toString());
+    this.setRecordStorageDuration(value);
+  }
+
+  /**
+   * Recupera il valore record
+   */
+  getRecordStorageDuration(): number{
+    return +localStorage.getItem(`arcade-record-duration`);
+  }
+
+  /**
+   * Setta il valore del record
+   */
+  setRecordStorageDuration(value: number): void {
+    const key = `arcade-record-duration`;
     const record: number = +localStorage.getItem(key);
-    // sovrascriviamo il valore solo se maggiore del record 
     if (value > record) {
       localStorage.setItem(key, value.toString());
     }
