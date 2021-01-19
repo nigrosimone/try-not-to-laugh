@@ -149,9 +149,6 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
         if (!this.neutralRequested) {
           beep();
           this.matchDuration++;
-          if (this.matchDuration > this.recordDuration) {
-            this.setLocalStorageDuration(this.matchDuration);
-          }
         }
         // l'utente deve tornare con una espressione neutra
         this.neutralRequested = true;
@@ -180,6 +177,9 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       // facciamo vibrare il cellulare
       window.navigator.vibrate(200);
       this.manageReadyToGameState();
+      if (this.matchDuration > this.recordDuration) {
+        this.setLocalStorageDuration(this.matchDuration);
+      }
       this.cdr.markForCheck();
     }
   }
