@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
@@ -239,6 +239,11 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Setta nel localstorage l'ultima durata del video corrente
    */
   setLocalStorageDuration(value: number): void {
-    localStorage.setItem(`arcade-${this.videoId}-duration`, value.toString());
+    const key = `arcade-${this.videoId}-duration`;
+    const record: number = +localStorage.getItem(key);
+    // sovrascriviamo il valore solo se maggiore del record 
+    if (value > record) {
+      localStorage.setItem(key, value.toString());
+    }
   }
 }
