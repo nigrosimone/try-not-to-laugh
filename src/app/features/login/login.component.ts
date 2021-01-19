@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { AuthenticationService } from 'src/app/core/services/auth/auth.service';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialog-alert.service';
+import { safeUnsubscribe } from 'src/app/shared/utils/common';
 
 const DIALOG_DESC_LOGINFACEBOOK = 'Il login attraverso Facebook è disponibile solo per gli sviluppatori. Usa il login come ospite.';
 @Component({
@@ -22,21 +23,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dialogAlertService: DialogAlertService) {}
 
   ngOnInit(): void {
-    this.subUser = this.authenticationService.currentUser.subscribe(user => {
+    this.subUser = this.authenticationService.currentUser.subscribe(() => {
       this.routingService.home();
     });
     this.loading = true;
     this.cdr.detectChanges();
-    this.authenticationService.load().then(() => {
+    this.authenticationService.load().finally(() => {
       this.loading = false;
       this.cdr.detectChanges();
     });
   }
 
   ngOnDestroy(): void {
-    if (this.subUser) {
-      this.subUser.unsubscribe();
-    }
+    safeUnsubscribe(this.subUser);
   }
 
   onLoginFacebook(): void {
