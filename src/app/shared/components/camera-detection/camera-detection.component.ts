@@ -1,5 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
+import { DetectSingleFaceLandmarksTask, FaceDetection } from 'face-api.js';
+import { PredictSingleAgeAndGenderTask } from 'face-api.js/build/commonjs/globalApi/PredictAgeAndGenderTask';
+import { PredictSingleFaceExpressionsTask } from 'face-api.js/build/commonjs/globalApi/PredictFaceExpressionsTask';
 
 
 @Component({
@@ -17,6 +20,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   @Input() width: number;
   @Input() height: number;
   @Input() missingLimit = 10;
+  @Input() enableFaceAndGender = false;
+  @Input() enableLandmarks = false;
 
   @Output() detectionReady: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() detectionChanges: EventEmitter<faceapi.FaceExpressions> = new EventEmitter<faceapi.FaceExpressions>();
@@ -63,11 +68,20 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
     const URI = '/assets/weights/';
 
-    await Promise.all([
+    const models = [
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
       faceapi.nets.faceRecognitionNet.loadFromUri(URI),
       faceapi.nets.faceExpressionNet.loadFromUri(URI),
-    ]);
+    ];
+
+    if (this.enableFaceAndGender) {
+      models.push(faceapi.nets.ageGenderNet.loadFromUri(URI));
+    }
+    if (this.enableLandmarks) {
+      models.push(faceapi.nets.faceLandmark68Net.loadFromUri(URI));
+    }
+
+    await Promise.all(models);
 
     this.loading = false;
     this.cdr.detectChanges();
@@ -90,7 +104,23 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
 
     // cerchiamo l'espressione della faccia nel video della webcam
-    const result = await faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+    let detectSingleFace: any;
+
+    if (this.enableLandmarks) {
+      detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
+    } else {
+      detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
+    }
+
+    let withFace: any;
+
+    if (this.enableFaceAndGender) {
+      withFace = detectSingleFace.withFaceExpressions().withAgeAndGender();
+    } else {
+      withFace = detectSingleFace.withFaceExpressions();
+    }
+
+    const result = await withFace;
 
     if (result) {
       if (!this.firstDetectionHappen) {
@@ -117,9 +147,22 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
         const rect = videoEl.getBoundingClientRect();
         const dims = faceapi.matchDimensions(canvas, rect, true);
         const resizedResult = faceapi.resizeResults(result, dims);
-        const minConfidence = 0.05;
+
         faceapi.draw.drawDetections(canvas, resizedResult);
-        faceapi.draw.drawFaceExpressions(canvas, resizedResult, minConfidence);
+        faceapi.draw.drawFaceExpressions(canvas, resizedResult as any, 0.05);
+        if (this.enableLandmarks) {
+          faceapi.draw.drawFaceLandmarks(canvas, resizedResult as any);
+        }
+        if (this.enableFaceAndGender) {
+          const { age, gender, genderProbability } = resizedResult;
+          new faceapi.draw.DrawTextField(
+            [
+              `${Math.round(age)} years`,
+              `${gender} (${Math.round(genderProbability * 100)} %)`
+            ],
+            result.detection.box.bottomLeft
+          ).draw(canvas);
+        }
       } else {
         // nascondiamo il canvas
         canvas.style.display = 'none';
