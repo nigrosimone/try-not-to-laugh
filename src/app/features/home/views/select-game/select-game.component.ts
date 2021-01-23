@@ -5,6 +5,7 @@ import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialo
 const DIALOG_DESC_ARCADE = 'In questa DEMO vedrai un video divertente, cerca di non ridere!';
 const DIALOG_DESC_FACEDETECTION = 'In questa DEMO puoi TESTARE il riconoscimento delle espressioni facciali';
 const DIALOG_DESC_EXPRESSIONTRAINING = 'In questa DEMO ti sarà chiesto di fare espressioni di un certo tipo in modo random, non sbagliare!';
+const DIALOG_DESC_EMOJIDETECTION = 'In questa demo la tua espressione viene utilizzata per selezionare una emoji pertinente';
 @Component({
   selector: 'app-select-game',
   templateUrl: './select-game.component.html',
@@ -36,6 +37,14 @@ export class SelectGameComponent {
     this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_EXPRESSIONTRAINING }).afterClosed().subscribe(result => {
       if (result) {
         this.routingService.homeExpressionTraining();
+      }
+    });
+  }
+
+  onEmojiDetection(): void {
+    this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_EMOJIDETECTION }).afterClosed().subscribe(result => {
+      if (result) {
+        this.routingService.homeEmojiDetection();
       }
     });
   }

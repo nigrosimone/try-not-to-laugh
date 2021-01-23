@@ -27,6 +27,10 @@ const routes: Routes = [
       {
         path: 'expression-training',
         loadChildren: () => import('./views/expression-training/expression-training.module').then(m => m.ExpressionTrainingModule)
+      },
+      {
+        path: 'emoji-detection',
+        loadChildren: () => import('./views/emoji-detection/emoji-detection.module').then(m => m.EmojiDetectionModule)
       }
     ]
   }

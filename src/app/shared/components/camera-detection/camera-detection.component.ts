@@ -38,6 +38,9 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   // se true il riconoscimento facciale è pronto
   private faceDetectionReady = false;
 
+  // timer
+  private timer;
+
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnDestroy(): void {
@@ -75,7 +78,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
     if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading) {
-      setTimeout(() => this.onPlay(), this.detectionTimer);
+      this.timer = setTimeout(() => this.onPlay(), this.detectionTimer);
       return;
     }
 
@@ -138,7 +141,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       this.detectionFace.emit(this.faceDetected);
     }
 
-    setTimeout(() => this.onPlay(), this.detectionTimer);
+    this.timer = setTimeout(() => this.onPlay(), this.detectionTimer);
   }
 
   /**

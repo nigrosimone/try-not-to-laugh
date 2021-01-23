@@ -33,4 +33,8 @@ export class RoutingService {
     homeExpressionTraining(): Promise<boolean> {
         return this.route.navigateByUrl(`${this.baseURL}/home/expression-training`);
     }
+
+    homeEmojiDetection(): Promise<boolean> {
+        return this.route.navigateByUrl(`${this.baseURL}/home/emoji-detection`);
+    }
 }
