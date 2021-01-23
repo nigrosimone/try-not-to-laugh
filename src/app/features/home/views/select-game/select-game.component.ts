@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialog-alert.service';
+import { createParticle } from 'src/app/shared/utils/common';
 
 const DIALOG_DESC_ARCADE = 'In questa DEMO vedrai un video divertente, cerca di non ridere!';
 const DIALOG_DESC_FACEDETECTION = 'In questa DEMO puoi TESTARE il riconoscimento delle espressioni facciali';
@@ -17,7 +18,8 @@ export class SelectGameComponent {
     private routingService: RoutingService,
     private dialogAlertService: DialogAlertService) { }
 
-  onFaceExpressionDetectionTest(): void {
+  onFaceExpressionDetectionTest(e: MouseEvent): void {
+    createParticle(e.x, e.y);
     this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_FACEDETECTION }).afterClosed().subscribe(result => {
       if (result) {
         this.routingService.homeCameraDetection();
@@ -25,7 +27,8 @@ export class SelectGameComponent {
     });
   }
 
-  onArcade(): void {
+  onArcade(e: MouseEvent): void {
+    createParticle(e.x, e.y);
     this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_ARCADE }).afterClosed().subscribe(result => {
       if (result) {
         this.routingService.homeArcade();
@@ -33,7 +36,8 @@ export class SelectGameComponent {
     });
   }
 
-  onExpressionTraining(): void {
+  onExpressionTraining(e: MouseEvent): void {
+    createParticle(e.x, e.y);
     this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_EXPRESSIONTRAINING }).afterClosed().subscribe(result => {
       if (result) {
         this.routingService.homeExpressionTraining();
@@ -41,7 +45,8 @@ export class SelectGameComponent {
     });
   }
 
-  onEmojiDetection(): void {
+  onEmojiDetection(e: MouseEvent): void {
+    createParticle(e.x, e.y);
     this.dialogAlertService.openDialog({ title: 'Info', content: DIALOG_DESC_EMOJIDETECTION }).afterClosed().subscribe(result => {
       if (result) {
         this.routingService.homeEmojiDetection();

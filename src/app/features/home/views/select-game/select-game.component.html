@@ -2,16 +2,16 @@
     <h1 style="margin-top: 10px;">Seleziona la modalità di gioco</h1>
     <div style="width: 80%; margin: auto;">
         <mat-selection-list [multiple]="false">
-            <mat-list-option (click)="onArcade()">
+            <mat-list-option (click)="onArcade($event)">
                 <mat-icon mat-list-icon>tag_faces</mat-icon> Arcade game
             </mat-list-option>
-            <mat-list-option (click)="onExpressionTraining()">
+            <mat-list-option (click)="onExpressionTraining($event)">
                 <mat-icon mat-list-icon>face</mat-icon> Allenamento delle espressioni
             </mat-list-option>
-            <mat-list-option (click)="onEmojiDetection()">
+            <mat-list-option (click)="onEmojiDetection($event)">
                 <mat-icon mat-list-icon>emoji_emotions</mat-icon> Selezione emoji 
             </mat-list-option>
-            <mat-list-option (click)="onFaceExpressionDetectionTest()">
+            <mat-list-option (click)="onFaceExpressionDetectionTest($event)">
                 <mat-icon mat-list-icon>api</mat-icon> Face expression detection (TEST)
             </mat-list-option>
         </mat-selection-list>
