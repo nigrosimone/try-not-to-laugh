@@ -18,6 +18,15 @@
         display: flex;
         flex-direction:column;
         flex: 1 1 auto;
+
+        .emoji {
+            transform-origin: center;
+            transform: scale(0.5);
+            position: absolute;
+            z-index: 10000;
+            width: 100%;
+            left: 0%;
+        }
     }
 
     .info {
