@@ -1,3 +1,4 @@
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarComponent } from './toolbar.component';
@@ -11,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
   imports: [
     CommonModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatIconModule,
     MatButtonModule,
     MatMenuModule

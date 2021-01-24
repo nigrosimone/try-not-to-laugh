@@ -1,3 +1,4 @@
+import { FacebookService } from './../../../../core/facebook/facebook.service';
 import { ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -18,6 +19,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   constructor(
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
+    private fbService: FacebookService,
     private routingService: RoutingService) { }
 
   ngOnInit(): void {
@@ -40,6 +42,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   onHome(): void {
     this.routingService.home();
+  }
+
+  onPersonAdd(): void {
+    this.fbService.inviteAFriend();
   }
 
   ngOnDestroy(): void {

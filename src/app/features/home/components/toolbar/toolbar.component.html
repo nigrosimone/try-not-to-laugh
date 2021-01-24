@@ -3,6 +3,9 @@
         <mat-icon>home</mat-icon>
     </button>
     <div style="width: 100%; text-align: right; font-size: 12px;">
+        <button mat-icon-button (click)="onPersonAdd()" matTooltip="invita un amico">
+            <mat-icon>person_add</mat-icon>
+        </button>
         <button mat-button [matMenuTriggerFor]="menu" [matTooltip]="user?.email" >
             <img [src]="imgSrc" class="avatar"></button></div>
     <mat-menu #menu="matMenu">
