@@ -6,7 +6,8 @@ import { CameraDetectionComponent } from 'src/app/shared/components/camera-detec
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
 
-const VIDEOS = ['BQJsMQjrBsw', 'FFLTU9eIijw', 's5kBCni69EM'];
+const VIDEOS = ['_TnkkZq-dbU', 'g6PSwYx3jA0', 'pl0KA-wPT8A'];
+
 @Component({
   selector: 'app-arcade',
   templateUrl: './arcade.component.html',
