@@ -66,7 +66,10 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
     this.video.nativeElement.srcObject = this.stream;
 
-    const URI = '/assets/weights/';
+    let URI = '/assets/weights/';
+    if (document.location.hostname.includes('github.io')) {
+      URI = '/nigrosimone/try-not-to-laugh' + URI;
+    }
 
     const models = [
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),
