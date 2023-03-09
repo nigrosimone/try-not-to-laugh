@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
-import { loadYouTubeApiScript } from '../../utils/youtube-api';
 
 
 @Component({
@@ -25,17 +24,16 @@ export class YoutubePlayerWrapperComponent implements OnInit {
   private seekApplied = false;
 
   // impostazioni del player di youtube
-  public playerVars: YT.PlayerVars = {
-    autoplay: YT.AutoPlay.NoAutoPlay,
-    controls: YT.Controls.Hide,
-    showinfo: YT.ShowInfo.Hide,
-    modestbranding: YT.ModestBranding.Modest,
-    rel: YT.RelatedVideos.Hide
-  };
+  public playerVars;
 
   ngOnInit(): void {
-    // carichiamo lo script delle API di youtube
-    loadYouTubeApiScript();
+    this.playerVars = {
+      autoplay: YT.AutoPlay.NoAutoPlay,
+      controls: YT.Controls.Hide,
+      showinfo: YT.ShowInfo.Hide,
+      modestbranding: YT.ModestBranding.Modest,
+      rel: YT.RelatedVideos.Hide
+    };
   }
 
   /**
