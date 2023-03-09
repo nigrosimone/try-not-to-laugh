@@ -80,7 +80,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Evento di cambiamento di stato del player di YouTube
    */
   onStateChange(e: YT.OnStateChangeEvent): void {
-    if (e.data === YT.PlayerState.ENDED) {
+    if (e.data === 0) {
       this.endGame(true);
     }
   }
