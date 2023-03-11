@@ -149,7 +149,13 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
         canvas.style.display = 'block';
         const rect = videoEl.getBoundingClientRect();
         const dims = faceapi.matchDimensions(canvas, rect, true);
-        const resizedResult = faceapi.resizeResults(result, dims);
+
+        let resizedResult;
+        try {
+          resizedResult = faceapi.resizeResults(result, dims);
+        } catch (error) {
+          return;
+        }
 
         faceapi.draw.drawDetections(canvas, resizedResult);
         faceapi.draw.drawFaceExpressions(canvas, resizedResult as any, 0.05);
