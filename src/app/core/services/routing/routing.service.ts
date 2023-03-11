@@ -6,35 +6,34 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class RoutingService {
 
-    private baseURL = document.location.hostname === 'github.com' ? 'try-not-to-laugh-frontend' : '';
 
     constructor(private route: Router) { }
 
     root(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/`);
+        return this.route.navigateByUrl(`/`);
     }
 
     login(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/login`);
+        return this.route.navigateByUrl(`/login`);
     }
 
     home(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/home`);
+        return this.route.navigateByUrl(`/home`);
     }
 
     homeCameraDetection(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/home/camera-detection`);
+        return this.route.navigateByUrl(`/home/camera-detection`);
     }
 
     homeArcade(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/home/arcade`);
+        return this.route.navigateByUrl(`/home/arcade`);
     }
 
     homeExpressionTraining(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/home/expression-training`);
+        return this.route.navigateByUrl(`/home/expression-training`);
     }
 
     homeEmojiDetection(): Promise<boolean> {
-        return this.route.navigateByUrl(`${this.baseURL}/home/emoji-detection`);
+        return this.route.navigateByUrl(`}/home/emoji-detection`);
     }
 }

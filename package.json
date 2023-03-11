@@ -7,8 +7,7 @@
     "build": "ng build --configuration production",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build-git": "ng build --output-path C:\\Users\\nigro\\OneDrive\\Documenti\\SVILUPPO\\nigrosimone\\docs\\try-not-to-laugh --base-href /nigrosimone/try-not-to-laugh/"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

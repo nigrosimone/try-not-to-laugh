@@ -68,7 +68,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
     let URI = '/assets/weights/';
     if (document.location.hostname.includes('github.io')) {
-      URI = '/nigrosimone/try-not-to-laugh' + URI;
+      URI = '/try-not-to-laugh-frontend' + URI;
     }
 
     const models = [
