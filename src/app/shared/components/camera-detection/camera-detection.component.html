@@ -3,5 +3,5 @@
 </div>
 <div class="video-container" [style.display]="loading ? 'none': 'flex'">
     <video [height]="height" [width]="width" (loadedmetadata)="onPlay()" autoplay muted playsinline #video></video>
-    <canvas #canvas [style.width]="width + 'px'" [style.height]="height + 'px'"></canvas>
+    <canvas #canvas [style.width.px]="width" [style.height.px]="height"></canvas>
 </div>

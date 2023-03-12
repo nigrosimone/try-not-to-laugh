@@ -152,7 +152,11 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
         let resizedResult;
         try {
-          resizedResult = faceapi.resizeResults(result, dims);
+          if (dims && dims.height > 0 && dims.width > 0) {
+            resizedResult = faceapi.resizeResults(result, dims);
+          } else {
+            return;
+          }
         } catch (error) {
           return;
         }
