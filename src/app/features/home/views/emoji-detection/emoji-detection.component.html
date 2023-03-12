@@ -1,4 +1,4 @@
-<div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
+<div class="game-container" [style.width.px]="width" [style.height.px]="height">
     <div class="info">
         <h1 *ngIf="detectionReady && !faceDetected">Non riesco a vedere la tua faccia!</h1>
     </div>

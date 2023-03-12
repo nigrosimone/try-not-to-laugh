@@ -1,4 +1,4 @@
-<div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
+<div class="game-container" [style.width.px]="width" [style.height.px]="height">
     <div class="info">
         <h1 *ngIf="endMatch && loseMatch">Hai perso, dovevi fare una faccia "{{ targetExpression.label }}" invece ne hai fatta una "{{loseExpression.label}}"!</h1>
         <h1 *ngIf="endMatch && winMatch">Hai vinto!</h1>

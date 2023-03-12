@@ -1,4 +1,4 @@
-<div class="game-container" [style.width]="width + 'px'" [style.height]="height + 'px'">
+<div class="game-container" [style.width.px]="width" [style.height.px]="height">
     <div class="info">
         <div *ngIf="endMatch" class="retry"><button class="retry-button" (click)="restartGame()"><h1>RIPROVA</h1></button></div>
         <h1 *ngIf="endMatch && loseMatch">Hai perso, hai sorriso!</h1>
