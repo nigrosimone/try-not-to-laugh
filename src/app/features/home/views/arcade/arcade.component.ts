@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';

@@ -85,7 +85,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
-  onDetectionReady(e: boolean): void {
+  onDetectionReady(_: boolean): void {
     this.detectionReady = true;
     this.doThirdPartyOnReady();
   }

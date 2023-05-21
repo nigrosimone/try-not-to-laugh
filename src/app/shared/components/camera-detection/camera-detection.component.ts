@@ -1,9 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
-import { DetectSingleFaceLandmarksTask, FaceDetection } from 'face-api.js';
-import { PredictSingleAgeAndGenderTask } from 'face-api.js/build/commonjs/globalApi/PredictAgeAndGenderTask';
-import { PredictSingleFaceExpressionsTask } from 'face-api.js/build/commonjs/globalApi/PredictFaceExpressionsTask';
-
 
 @Component({
   selector: 'app-camera-detection',

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 // tslint:disable-next-line: ban-types
-declare var gtag: Function;
+declare const gtag: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
