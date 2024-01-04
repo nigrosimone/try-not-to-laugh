@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { YouTubePlayer } from '@angular/youtube-player';
 
 
@@ -8,7 +8,7 @@ import { YouTubePlayer } from '@angular/youtube-player';
   styleUrls: ['./youtube-player-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class YoutubePlayerWrapperComponent implements OnInit {
+export class YoutubePlayerWrapperComponent {
 
   @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
 
@@ -24,16 +24,15 @@ export class YoutubePlayerWrapperComponent implements OnInit {
   private seekApplied = false;
 
   // impostazioni del player di youtube
-  public playerVars;
-
-  ngOnInit(): void {
-    this.playerVars = {
-      autoplay: 0,
-      controls: 0,
-      showinfo: 0,
-      modestbranding: 1,
-      rel: 0
-    };
+  public playerVars = {
+    autoplay: 0,
+    controls: 0,
+    showinfo: 0,
+    modestbranding: 1,
+    rel: 0,
+    enablejsapi: 0,
+    origin: location.href,
+    widget_referrer: location.href
   }
 
   /**

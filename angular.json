@@ -72,18 +72,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "try-not-to-laugh:build"
+            "buildTarget": "try-not-to-laugh:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "try-not-to-laugh:build:production"
+              "buildTarget": "try-not-to-laugh:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "try-not-to-laugh:build"
+            "buildTarget": "try-not-to-laugh:build"
           }
         },
         "test": {
