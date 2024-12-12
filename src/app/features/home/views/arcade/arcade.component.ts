@@ -1,22 +1,34 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
+import { DecimalPipe } from '@angular/common';
+import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize-time.pipe';
 
 const VIDEOS = ['_TnkkZq-dbU', 'g6PSwYx3jA0', 'pl0KA-wPT8A'];
 
 @Component({
-  selector: 'app-arcade',
-  templateUrl: './arcade.component.html',
-  styleUrls: ['./arcade.component.scss']
+    selector: 'app-arcade',
+    templateUrl: './arcade.component.html',
+    styleUrls: ['./arcade.component.scss'],
+    imports: [
+      YoutubePlayerWrapperComponent, 
+      CameraDetectionComponent, 
+      DecimalPipe, 
+      HumanizeTimePipe
+    ]
 })
 export class ArcadeComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowService);
+  private elRef = inject(ElementRef);
 
-  @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
-  @ViewChild('youtube', { static: false }) youtube: YoutubePlayerWrapperComponent;
+
+  readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
+  readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
 
   // id del video di youtube
   public videoId = randomItemFromArray<string>(VIDEOS);
@@ -59,10 +71,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
 
   private subVwChanges: Subscription;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private windowService: WindowService,
-    private elRef: ElementRef) {
+  constructor() {
     this.recordDuration = this.getRecordStorageDuration();
   }
 
@@ -154,7 +163,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     }
 
     // recuperiamo il tempo di esecuzione del video di youtube
-    const timeElapse = this.youtube.getCurrentTimeIntSeeked();
+    const timeElapse = this.youtube().getCurrentTimeIntSeeked();
     if (this.timeElapse !== timeElapse) {
       this.timeElapse = timeElapse;
     }
@@ -170,9 +179,9 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube,
     // questo perchè il video parte in autoplay la prima volta
     if (!this.faceDetected || !document.hasFocus()) {
-      this.youtube.pauseVideo();
+      this.youtube().pauseVideo();
     } else {
-      this.youtube.playVideo();
+      this.youtube().playVideo();
     }
   }
 
@@ -185,9 +194,9 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       this.loseMatch = !this.winMatch;
       this.endMatch = true;
       // mettiamo in pausa il video della webcam
-      this.cameraDetection.pauseVideo();
+      this.cameraDetection().pauseVideo();
       // fermiamo il video di youtube
-      this.youtube.stopVideo();
+      this.youtube().stopVideo();
       // facciamo vibrare il cellulare
       window.navigator.vibrate(200);
       this.manageReadyToGameState();
@@ -199,7 +208,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   restartGame(): void {
       this.endMatch = false;
       // riavviamo il video della webcam
-      this.cameraDetection.playVideo();
+      this.cameraDetection().playVideo();
       this.manageReadyToGameState();
       this.recordDuration = this.getRecordStorageDuration();
       this.cdr.markForCheck();

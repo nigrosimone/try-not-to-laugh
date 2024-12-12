@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { Emoji } from 'src/app/shared/components/emoji/emoji.component';
 import { safeUnsubscribe } from 'src/app/shared/utils/common';
+import { EmojiComponent } from '../../../../shared/components/emoji/emoji.component';
 
 interface Expression {
   expression: keyof faceapi.FaceExpressions;
@@ -23,11 +24,16 @@ const EXPRESSIONS: Array<Expression> = [
 @Component({
   selector: 'app-emoji-detection',
   templateUrl: './emoji-detection.component.html',
-  styleUrls: ['./emoji-detection.component.scss']
+  styleUrls: ['./emoji-detection.component.scss'],
+  imports: [CameraDetectionComponent, EmojiComponent]
 })
 export class EmojiDetectionComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowService);
+  private elRef = inject(ElementRef);
 
-  @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
+
+  readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
   // emoji abilitate
   public emojiEnabled: Emoji = {
@@ -61,10 +67,10 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
 
   private subVwChanges: Subscription;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private windowService: WindowService,
-    private elRef: ElementRef) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -123,11 +129,11 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
         const value: number = e[ex.expression] as number;
         if (foundExpression) {
           if (value > foundExpression.value) {
-            foundExpression = {expression: ex.expression, value};
+            foundExpression = { expression: ex.expression, value };
           }
         } else {
           if (value > 0) {
-            foundExpression = {expression: ex.expression, value};
+            foundExpression = { expression: ex.expression, value };
           }
         }
       }

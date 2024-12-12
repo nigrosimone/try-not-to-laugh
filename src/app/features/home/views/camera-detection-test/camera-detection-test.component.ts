@@ -1,25 +1,24 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { safeUnsubscribe } from 'src/app/shared/utils/common';
+import { CameraDetectionComponent } from '../../../../shared/components/camera-detection/camera-detection.component';
 
 @Component({
-  selector: 'app-camera-detection-test',
-  templateUrl: './camera-detection-test.component.html',
-  styleUrls: ['./camera-detection-test.component.scss']
+    selector: 'app-camera-detection-test',
+    templateUrl: './camera-detection-test.component.html',
+    styleUrls: ['./camera-detection-test.component.scss'],
+    imports: [CameraDetectionComponent]
 })
 export class CameraDetectionTestComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowService);
+  private elRef = inject(ElementRef);
 
   public width: number;
   public height: number;
 
   private subVwChanges: Subscription;
-
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private windowService: WindowService,
-    private elRef: ElementRef) {
-  }
 
   ngOnInit(): void {
     this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {

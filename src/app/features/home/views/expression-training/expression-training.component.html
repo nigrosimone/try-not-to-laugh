@@ -1,16 +1,30 @@
 <div class="game-container" [style.width.px]="width" [style.height.px]="height">
-    <div class="info">
-        <h1 *ngIf="endMatch && loseMatch">Hai perso, dovevi fare una faccia "{{ targetExpression.label }}" invece ne hai fatta una "{{loseExpression.label}}"!</h1>
-        <h1 *ngIf="endMatch && winMatch">Hai vinto!</h1>
-        <h1 *ngIf="detectionReady && !endMatch && !faceDetected">Non riesco a vedere la tua faccia!</h1>
-        <h1 *ngIf="faceDetected && !endMatch && !neutralRequested">Fai una faccia: {{ targetExpression.label }}</h1>
-        <h1 *ngIf="faceDetected && !endMatch && neutralRequested">Bravo! adesso torna con una espressione normale per una nuova sfida</h1>
-        <div class="badge-container" *ngIf="faceDetected || endMatch">
-            <span class="badge badge-duration" [style.background]="matchDuration > recordDuration ? 'green' : 'blue'">Espressioni: {{ matchDuration }}</span>
-            <span class="badge badge-record-duration" *ngIf="recordDuration">Record: {{ recordDuration }}</span>
-        </div>
-    </div>
-    <div class="webcam">
-        <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
-    </div>
+  <div class="info">
+    @if (endMatch && loseMatch) {
+      <h1>Hai perso, dovevi fare una faccia "{{ targetExpression.label }}" invece ne hai fatta una "{{loseExpression.label}}"!</h1>
+    }
+    @if (endMatch && winMatch) {
+      <h1>Hai vinto!</h1>
+    }
+    @if (detectionReady && !endMatch && !faceDetected) {
+      <h1>Non riesco a vedere la tua faccia!</h1>
+    }
+    @if (faceDetected && !endMatch && !neutralRequested) {
+      <h1>Fai una faccia: {{ targetExpression.label }}</h1>
+    }
+    @if (faceDetected && !endMatch && neutralRequested) {
+      <h1>Bravo! adesso torna con una espressione normale per una nuova sfida</h1>
+    }
+    @if (faceDetected || endMatch) {
+      <div class="badge-container">
+        <span class="badge badge-duration" [style.background]="matchDuration > recordDuration ? 'green' : 'blue'">Espressioni: {{ matchDuration }}</span>
+        @if (recordDuration) {
+          <span class="badge badge-record-duration">Record: {{ recordDuration }}</span>
+        }
+      </div>
+    }
+  </div>
+  <div class="webcam">
+    <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+  </div>
 </div>

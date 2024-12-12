@@ -1,15 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
+import {  MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.scss']
+  styleUrls: ['./toolbar.component.scss'],
+  imports: [MatToolbarModule, MatButtonModule, MatIconModule],
+  standalone: true
 })
 export class ToolbarComponent {
-
-  constructor(private routingService: RoutingService) { }
+  private routingService = inject(RoutingService);
 
   onHome(): void {
     this.routingService.home();

@@ -1,24 +1,26 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { YouTubePlayer } from '@angular/youtube-player';
+import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
+import { YouTubePlayer, YouTubePlayerModule } from '@angular/youtube-player';
 
 
 @Component({
   selector: 'app-youtube-player-wrapper',
   templateUrl: './youtube-player-wrapper.component.html',
   styleUrls: ['./youtube-player-wrapper.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [YouTubePlayerModule],
+  standalone: true
 })
 export class YoutubePlayerWrapperComponent {
 
-  @ViewChild('youtube', { static: false }) youtube: YouTubePlayer;
+  readonly youtube = viewChild<YouTubePlayer>('youtube');
 
-  @Input() videoId: string;
-  @Input() seek: number;
-  @Input() width: number;
-  @Input() height: number;
+  readonly videoId = input<string>(undefined);
+  readonly seek = input<number>(undefined);
+  readonly width = input<number>(undefined);
+  readonly height = input<number>(undefined);
 
-  @Output() stateChange: EventEmitter<YT.OnStateChangeEvent> = new EventEmitter<YT.OnStateChangeEvent>();
-  @Output() ready: EventEmitter<YT.PlayerEvent> = new EventEmitter<YT.PlayerEvent>();
+  readonly stateChange = output<YT.OnStateChangeEvent>();
+  readonly ready = output<YT.PlayerEvent>();
 
   private seekChecked = false;
   private seekApplied = false;
@@ -40,10 +42,10 @@ export class YoutubePlayerWrapperComponent {
    */
   onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === 1) {
-      if (!this.seekApplied && !this.seekChecked && this.seek > 0) {
+      if (!this.seekApplied && !this.seekChecked && this.seek() > 0) {
         this.seekChecked = true;
-        if (this.seek < this.youtube.getDuration()) {
-          this.youtube.seekTo(this.seek, true);
+        if (this.seek() < this.youtube().getDuration()) {
+          this.youtube().seekTo(this.seek(), true);
           this.seekApplied = true;
         }
       }
@@ -55,28 +57,28 @@ export class YoutubePlayerWrapperComponent {
    * Mette in pausa la webcam
    */
   pauseVideo(): void {
-    this.youtube.pauseVideo();
+    this.youtube().pauseVideo();
   }
 
   /**
    * Mette in play la webcam
    */
   playVideo(): void {
-    this.youtube.playVideo();
+    this.youtube().playVideo();
   }
 
   /**
    * Ferma il video
    */
   stopVideo(): void {
-    this.youtube.stopVideo();
+    this.youtube().stopVideo();
   }
 
   /**
    * Torna i secondi visualizzati del video
    */
   getCurrentTime(): number {
-    return this.youtube.getCurrentTime();
+    return this.youtube().getCurrentTime();
   }
 
   /**
@@ -92,7 +94,7 @@ export class YoutubePlayerWrapperComponent {
   getCurrentTimeIntSeeked(): number {
     let time = this.getCurrentTimeInt();
     if (this.seekApplied) {
-      time = time - this.seek;
+      time = time - this.seek();
     }
     return time;
   }

@@ -1,13 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-
-
 
 @Injectable({ providedIn: 'root' })
 export class RoutingService {
-
-
-    constructor(private route: Router) { }
+    private route = inject(Router);
 
     root(): Promise<boolean> {
         return this.route.navigateByUrl(`/`);
@@ -34,6 +30,6 @@ export class RoutingService {
     }
 
     homeEmojiDetection(): Promise<boolean> {
-        return this.route.navigateByUrl(`}/home/emoji-detection`);
+        return this.route.navigateByUrl(`/home/emoji-detection`);
     }
 }

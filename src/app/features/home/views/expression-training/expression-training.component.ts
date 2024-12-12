@@ -1,9 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { beep, randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
+import { CameraDetectionComponent as CameraDetectionComponent_1 } from '../../../../shared/components/camera-detection/camera-detection.component';
 
 interface Expression {
   expression: keyof Omit<faceapi.FaceExpressions, 'neutral'>;
@@ -19,13 +20,18 @@ const EXPRESSIONS: Array<Expression> = [
   { expression: 'surprised', label: 'sorpresa' }
 ];
 @Component({
-  selector: 'app-expression-training',
-  templateUrl: './expression-training.component.html',
-  styleUrls: ['./expression-training.component.scss']
+    selector: 'app-expression-training',
+    templateUrl: './expression-training.component.html',
+    styleUrls: ['./expression-training.component.scss'],
+    imports: [CameraDetectionComponent_1]
 })
 export class ExpressionTrainingComponent implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
+  private windowService = inject(WindowService);
+  private elRef = inject(ElementRef);
 
-  @ViewChild('cameraDetection', { static: false }) cameraDetection: CameraDetectionComponent;
+
+  readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
   // epressione da fare
   public targetExpression: Expression = randomItemFromArray<Expression>(EXPRESSIONS);
@@ -65,10 +71,10 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
 
   private subVwChanges: Subscription;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private windowService: WindowService,
-    private elRef: ElementRef) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
     this.recordDuration = this.getLocalStorageDuration();
   }
 
@@ -173,7 +179,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
       this.loseMatch = !this.winMatch;
       this.endMatch = true;
       // mettiamo in pausa il video della webcam
-      this.cameraDetection.pauseVideo();
+      this.cameraDetection().pauseVideo();
       // facciamo vibrare il cellulare
       window.navigator.vibrate(200);
       this.manageReadyToGameState();

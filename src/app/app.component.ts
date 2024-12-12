@@ -1,15 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 // tslint:disable-next-line: ban-types
 declare const gtag: any;
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterOutlet]
 })
 export class AppComponent {
-  constructor(public router: Router) {
+  router = inject(Router);
+
+  constructor() {
 
     // subscribe to router events and send page views to Google Analytics
     this.router.events.subscribe(event => {
