@@ -8,7 +8,7 @@ import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/commo
 import { DecimalPipe } from '@angular/common';
 import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize-time.pipe';
 
-const VIDEOS = ['_TnkkZq-dbU', 'g6PSwYx3jA0', 'pl0KA-wPT8A'];
+const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
 
 @Component({
     selector: 'app-arcade',
