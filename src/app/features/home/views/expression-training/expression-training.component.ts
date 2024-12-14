@@ -105,47 +105,48 @@ export class ExpressionTrainingComponent implements OnInit {
     // ridimensioniamo l'area di gioco
     this.doResize();
 
-    // faccia trovata?
-    if (e) {
+    // faccia non trovata
+    if (!e) {
+      return;
+    }
 
-      let foundTargetExpression = null;
-      let foundNonTargetExpression = null;
-      const target = this.targetExpression().expression;
-      for (const ex of EXPRESSIONS) {
-        const value: number = e[ex.expression] as number;
-        if (ex.expression === target) {
-          if (value > 0.4) {
-            foundTargetExpression = ex;
-            break;
-          }
-        } else {
-          if (value > 0.94) {
-            foundNonTargetExpression = ex;
-            break;
-          }
+    let foundTargetExpression = null;
+    let foundNonTargetExpression = null;
+    const target = this.targetExpression().expression;
+    for (const ex of EXPRESSIONS) {
+      const value: number = e[ex.expression] as number;
+      if (ex.expression === target) {
+        if (value > 0.4) {
+          foundTargetExpression = ex;
+          break;
         }
-      }
-
-      if (foundNonTargetExpression) {
-        this.loseExpression.set(foundNonTargetExpression);
-        this.endGame(false);
-        return;
-      }
-
-      // se l'espressione è maggiore di ... genreriamo una nuova epressione
-      if (foundTargetExpression) {
-        if (!this.neutralRequested()) {
-          beep();
-          this.matchDuration.update(value => value + 1);
-        }
-        // l'utente deve tornare con una espressione neutra
-        this.neutralRequested.set(true);
       } else {
-        // se è richiesta una espressione neutrale e l'utente la fa
-        if (this.neutralRequested() && e.neutral > 0.6) {
-          this.targetExpression.set(randomItemFromArray<Expression>(EXPRESSIONS));
-          this.neutralRequested.set(false);
+        if (value > 0.94) {
+          foundNonTargetExpression = ex;
+          break;
         }
+      }
+    }
+
+    if (foundNonTargetExpression) {
+      this.loseExpression.set(foundNonTargetExpression);
+      this.endGame(false);
+      return;
+    }
+
+    // se l'espressione è maggiore di ... genreriamo una nuova epressione
+    if (foundTargetExpression) {
+      if (!this.neutralRequested()) {
+        beep();
+        this.matchDuration.update(value => value + 1);
+      }
+      // l'utente deve tornare con una espressione neutra
+      this.neutralRequested.set(true);
+    } else {
+      // se è richiesta una espressione neutrale e l'utente la fa
+      if (this.neutralRequested() && e.neutral > 0.6) {
+        this.targetExpression.set(randomItemFromArray<Expression>(EXPRESSIONS));
+        this.neutralRequested.set(false);
       }
     }
   }
