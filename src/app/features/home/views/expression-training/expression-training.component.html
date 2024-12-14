@@ -1,30 +1,30 @@
-<div class="game-container" [style.width.px]="width" [style.height.px]="height">
+<div class="game-container" [style.width.px]="width()" [style.height.px]="height()">
   <div class="info">
-    @if (endMatch && loseMatch) {
-      <h1>Hai perso, dovevi fare una faccia "{{ targetExpression.label }}" invece ne hai fatta una "{{loseExpression.label}}"!</h1>
+    @if (endMatch() && loseMatch()) {
+      <h1>Hai perso, dovevi fare una faccia "{{ targetExpression().label }}" invece ne hai fatta una "{{loseExpression().label}}"!</h1>
     }
-    @if (endMatch && winMatch) {
+    @if (endMatch() && winMatch()) {
       <h1>Hai vinto!</h1>
     }
-    @if (detectionReady && !endMatch && !faceDetected) {
+    @if (detectionReady() && !endMatch() && !faceDetected()) {
       <h1>Non riesco a vedere la tua faccia!</h1>
     }
-    @if (faceDetected && !endMatch && !neutralRequested) {
-      <h1>Fai una faccia: {{ targetExpression.label }}</h1>
+    @if (faceDetected() && !endMatch() && !neutralRequested()) {
+      <h1>Fai una faccia: {{ targetExpression().label }}</h1>
     }
-    @if (faceDetected && !endMatch && neutralRequested) {
+    @if (faceDetected() && !endMatch() && neutralRequested()) {
       <h1>Bravo! adesso torna con una espressione normale per una nuova sfida</h1>
     }
-    @if (faceDetected || endMatch) {
+    @if (faceDetected() || endMatch()) {
       <div class="badge-container">
-        <span class="badge badge-duration" [style.background]="matchDuration > recordDuration ? 'green' : 'blue'">Espressioni: {{ matchDuration }}</span>
-        @if (recordDuration) {
-          <span class="badge badge-record-duration">Record: {{ recordDuration }}</span>
+        <span class="badge badge-duration" [style.background]="matchDuration() > recordDuration() ? 'green' : 'blue'">Espressioni: {{ matchDuration() }}</span>
+        @if (recordDuration()) {
+          <span class="badge badge-record-duration">Record: {{ recordDuration() }}</span>
         }
       </div>
     }
   </div>
   <div class="webcam">
-    <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
   </div>
 </div>
