@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
-import { YouTubePlayer, YouTubePlayerModule } from '@angular/youtube-player';
+import { YouTubePlayer, YouTubePlayerModule, YOUTUBE_PLAYER_CONFIG } from '@angular/youtube-player';
 
 
 @Component({
@@ -7,7 +7,13 @@ import { YouTubePlayer, YouTubePlayerModule } from '@angular/youtube-player';
   templateUrl: './youtube-player-wrapper.component.html',
   styleUrls: ['./youtube-player-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [YouTubePlayerModule]
+  imports: [YouTubePlayerModule],
+  providers: [{
+    provide: YOUTUBE_PLAYER_CONFIG,
+    useValue: {
+      loadApi: false
+    }
+  }]
 })
 export class YoutubePlayerWrapperComponent {
 
