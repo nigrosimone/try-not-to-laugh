@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent, FaceExpressions } from 'src/app/shared/components/camera-detection/camera-detection.component';
@@ -45,7 +45,7 @@ export class ExpressionTrainingComponent implements OnInit {
   // partita terminata
   public endMatch = signal(false);
   // partita terminata come persa
-  public loseMatch = signal(false);
+  public loseMatch = computed(() => !this.winMatch());
   // partita terminata come vinta
   public winMatch = signal(false);
 
@@ -110,15 +110,18 @@ export class ExpressionTrainingComponent implements OnInit {
 
       let foundTargetExpression = null;
       let foundNonTargetExpression = null;
+      const target = this.targetExpression().expression;
       for (const ex of EXPRESSIONS) {
         const value: number = e[ex.expression] as number;
-        if (ex.expression === this.targetExpression().expression) {
+        if (ex.expression === target) {
           if (value > 0.4) {
             foundTargetExpression = ex;
+            break;
           }
         } else {
           if (value > 0.94) {
             foundNonTargetExpression = ex;
+            break;
           }
         }
       }
@@ -153,7 +156,6 @@ export class ExpressionTrainingComponent implements OnInit {
   endGame(userWin: boolean): void {
     if (!this.endMatch()) {
       this.winMatch.set(userWin);
-      this.loseMatch.set(!this.winMatch());
       this.endMatch.set(true);
       // mettiamo in pausa il video della webcam
       this.cameraDetection().pauseVideo();
@@ -166,9 +168,10 @@ export class ExpressionTrainingComponent implements OnInit {
   }
 
   doResize(): void {
+    const { clientWidth, clientHeight } = this.elRef.nativeElement;
     // -1 altrimenti esce la scrollbar
-    this.width.set(this.elRef.nativeElement.clientWidth - 1);
-    this.height.set(this.elRef.nativeElement.clientHeight - 1);
+    this.width.set(clientWidth - 1);
+    this.height.set(clientHeight - 1);
   }
 
   /**
