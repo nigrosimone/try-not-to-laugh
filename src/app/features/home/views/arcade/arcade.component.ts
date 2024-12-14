@@ -74,9 +74,7 @@ export class ArcadeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.doResize();
-    });
+    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.doResize());
   }
 
   /**
@@ -192,16 +190,10 @@ export class ArcadeComponent implements OnInit {
   }
 
   doResize(): void {
+    const { clientWidth, clientHeight } = this.elRef.nativeElement;
     // -1 altrimenti esce la scrollbar
-    this.width.set(this.elRef.nativeElement.clientWidth - 1);
-    this.height.set(this.elRef.nativeElement.clientHeight - 1);
-  }
-
-  /**
-   * Recupera dal localstorage l'ultima durata del video corrente
-   */
-  getLocalStorageDuration(): number {
-    return +localStorage.getItem(`arcade-${this.videoId()}-duration`);
+    this.width.set(clientWidth - 1);
+    this.height.set(clientHeight - 1);
   }
 
   /**
@@ -209,7 +201,9 @@ export class ArcadeComponent implements OnInit {
    */
   setLocalStorageDuration(value: number): void {
     localStorage.setItem(`arcade-${this.videoId()}-duration`, value.toString());
-    this.setRecordStorageDuration(value);
+    if (value > this.recordDuration()) {
+      localStorage.setItem(LOCAL_STORAGE_KEY_RECORD, value.toString());
+    }
   }
 
   /**
@@ -217,14 +211,5 @@ export class ArcadeComponent implements OnInit {
    */
   getRecordStorageDuration(): number {
     return +localStorage.getItem(LOCAL_STORAGE_KEY_RECORD);
-  }
-
-  /**
-   * Setta il valore del record
-   */
-  setRecordStorageDuration(value: number): void {
-    if (value > this.recordDuration()) {
-      localStorage.setItem(LOCAL_STORAGE_KEY_RECORD, value.toString());
-    }
   }
 }
