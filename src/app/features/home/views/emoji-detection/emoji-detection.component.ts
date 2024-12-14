@@ -123,6 +123,9 @@ export class EmojiDetectionComponent implements AfterViewInit {
             foundExpression = { expression: ex.expression, value };
           }
         }
+        if (value >= 0.99) {
+          break;
+        }
       }
 
       if (foundExpression) {
