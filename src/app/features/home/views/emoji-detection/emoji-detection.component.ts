@@ -34,7 +34,7 @@ export class EmojiDetectionComponent implements AfterViewInit {
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
   // emoji abilitate
-  public emojiEnabled: Emoji = {
+  public emojiEnabled = signal({
     like: false,
     love: false,
     haha: true,
@@ -42,9 +42,9 @@ export class EmojiDetectionComponent implements AfterViewInit {
     wow: true,
     sad: true,
     angry: true
-  };
+  });
   // emoji predominante
-  public emojiHighlight: keyof Emoji;
+  public emojiHighlight = signal<keyof Emoji>(null);
 
   // true se l'espressione facciale è stata trovata nella webcam
   public faceDetected = signal(false);
@@ -110,7 +110,7 @@ export class EmojiDetectionComponent implements AfterViewInit {
 
     // faccia trovata?
     if (e) {
-      // recuperiamo l'espressione prefominante
+      // recuperiamo l'espressione predominante
       let foundExpression: Expression = null;
       for (const ex of EXPRESSIONS) {
         const value: number = e[ex.expression] as number;
@@ -128,19 +128,19 @@ export class EmojiDetectionComponent implements AfterViewInit {
       if (foundExpression) {
         switch (foundExpression.expression) {
           case 'angry':
-            this.emojiHighlight = 'angry';
+            this.emojiHighlight.set('angry');
             break;
           case 'happy':
-            this.emojiHighlight = 'haha';
+            this.emojiHighlight.set('haha');
             break;
           case 'sad':
-            this.emojiHighlight = 'sad';
+            this.emojiHighlight.set('sad');
             break;
           case 'surprised':
-            this.emojiHighlight = 'wow';
+            this.emojiHighlight.set('wow');
             break;
           default:
-            this.emojiHighlight = null;
+            this.emojiHighlight.set(null);
             break;
         }
       }

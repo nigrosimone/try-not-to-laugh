@@ -7,7 +7,7 @@
   <div class="webcam">
     <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
     @if (detectionReady() && faceDetected()) {
-      <app-emoji class="emoji" [emojiEnabled]="emojiEnabled" [emojiHighlight]="emojiHighlight"></app-emoji>
+      <app-emoji class="emoji" [emojiEnabled]="emojiEnabled()" [emojiHighlight]="emojiHighlight()"></app-emoji>
     }
   </div>
 </div>
