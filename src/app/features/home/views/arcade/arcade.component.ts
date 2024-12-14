@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import type { FaceExpressions } from 'face-api.js';
 import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
-import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
+import { randomItemFromArray } from 'src/app/shared/utils/common';
 import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize-time.pipe';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
 
@@ -22,9 +23,11 @@ const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArcadeComponent implements OnInit, OnDestroy {
+export class ArcadeComponent implements OnInit {
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
+  private destroyRef = inject(DestroyRef);
+
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
   readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
@@ -75,13 +78,9 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
+    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.doResize();
     });
-  }
-
-  ngOnDestroy(): void {
-    safeUnsubscribe(this.subVwChanges);
   }
 
   /**
