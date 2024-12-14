@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop"
-import { WindowService } from 'src/app/core/services/window/windos.service';
+import { WindowService } from 'src/app/core/services/window/window.service';
 import { CameraDetectionComponent } from '../../../../shared/components/camera-detection/camera-detection.component';
 
 @Component({

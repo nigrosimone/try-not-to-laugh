@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { WindowService } from 'src/app/core/services/window/windos.service';
+import { WindowService } from 'src/app/core/services/window/window.service';
 import { CameraDetectionComponent, FaceExpressions } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { beep, randomItemFromArray } from 'src/app/shared/utils/common';
 
