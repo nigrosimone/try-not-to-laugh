@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { RouterOutlet } from '@angular/router';
@@ -15,16 +15,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RouterOutlet, 
     MatButtonModule,
     MatTooltipModule
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
   private routingService = inject(RoutingService);
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-
-  constructor() { }
 
   onFaceExpressionDetectionTest(): void {
     this.routingService.homeCameraDetection();

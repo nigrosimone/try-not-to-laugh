@@ -1,33 +1,27 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
-import type { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop"
 import { WindowService } from 'src/app/core/services/window/windos.service';
-import { safeUnsubscribe } from 'src/app/shared/utils/common';
 import { CameraDetectionComponent } from '../../../../shared/components/camera-detection/camera-detection.component';
 
 @Component({
-    selector: 'app-camera-detection-test',
-    templateUrl: './camera-detection-test.component.html',
-    styleUrls: ['./camera-detection-test.component.scss'],
-    imports: [CameraDetectionComponent]
+  selector: 'app-camera-detection-test',
+  templateUrl: './camera-detection-test.component.html',
+  styleUrls: ['./camera-detection-test.component.scss'],
+  imports: [CameraDetectionComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CameraDetectionTestComponent implements OnInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
+export class CameraDetectionTestComponent {
+  private destroyRef = inject(DestroyRef);
   private windowService = inject(WindowService);
-  private elRef = inject(ElementRef);
+  private elRef: ElementRef<HTMLElement> = inject(ElementRef);
 
-  public width: number;
-  public height: number;
+  public width = signal<number>(null);
+  public height = signal<number>(null);
 
-  private subVwChanges: Subscription;
-
-  ngOnInit(): void {
-    this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
+  constructor() {
+    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.doResize();
     });
-  }
-
-  ngOnDestroy(): void {
-    safeUnsubscribe(this.subVwChanges);
   }
 
   onDetectionReady(): void {
@@ -36,13 +30,9 @@ export class CameraDetectionTestComponent implements OnInit, OnDestroy {
 
   doResize(): void {
     // -1 altrimenti esce la scrollbar
-    const w = this.elRef.nativeElement.clientWidth - 1;
-    const h = this.elRef.nativeElement.clientHeight - 1;
-
-    if (w !== this.width || h !== this.height) {
-      this.width = w;
-      this.height = h;
-      this.cdr.detectChanges();
-    }
+    this.width.set(this.elRef.nativeElement.clientWidth - 1);
+    this.height.set(this.elRef.nativeElement.clientHeight - 1);
   }
 }
+
+

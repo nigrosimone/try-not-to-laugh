@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { take } from 'rxjs';
@@ -16,7 +16,8 @@ const DIALOG_DESC_EMOJIDETECTION = 'In questa demo la tua espressione viene util
   templateUrl: './select-game.component.html',
   styleUrls: ['./select-game.component.scss'],
   imports: [MatListModule, MatIconModule],
-  providers: [DialogAlertService]
+  providers: [DialogAlertService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGameComponent {
   private routingService = inject(RoutingService);

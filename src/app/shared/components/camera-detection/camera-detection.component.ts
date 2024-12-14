@@ -1,16 +1,15 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, inject, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, input, output, signal, viewChild } from '@angular/core';
 import * as faceapi from 'face-api.js';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
-    selector: 'app-camera-detection',
-    templateUrl: './camera-detection.component.html',
-    styleUrls: ['./camera-detection.component.scss'],
-    imports: [MatProgressSpinnerModule]
+  selector: 'app-camera-detection',
+  templateUrl: './camera-detection.component.html',
+  styleUrls: ['./camera-detection.component.scss'],
+  imports: [MatProgressSpinnerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
-
 
   readonly video = viewChild<ElementRef<HTMLVideoElement>>('video');
   readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
@@ -29,7 +28,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   readonly detectionFace = output<boolean>();
 
   // se stiamo caricando gli assets
-  public loading = false;
+  public loading = signal(false);
 
   // stream della webcam
   private stream: MediaStream;
@@ -57,8 +56,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   private async run(): Promise<void> {
-    this.loading = true;
-    this.cdr.detectChanges();
+    this.loading.set(true);
 
     // avviamo lo stream del webcam
     this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -84,8 +82,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
     await Promise.all(models);
 
-    this.loading = false;
-    this.cdr.detectChanges();
+    this.loading.set(false);
   }
 
   async onPlay(): Promise<void> {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import {  MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
   imports: [MatToolbarModule, MatButtonModule, MatIconModule],
-  standalone: true
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToolbarComponent {
   private routingService = inject(RoutingService);

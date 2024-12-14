@@ -7,8 +7,7 @@ import { YouTubePlayer, YouTubePlayerModule } from '@angular/youtube-player';
   templateUrl: './youtube-player-wrapper.component.html',
   styleUrls: ['./youtube-player-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [YouTubePlayerModule],
-  standalone: true
+  imports: [YouTubePlayerModule]
 })
 export class YoutubePlayerWrapperComponent {
 

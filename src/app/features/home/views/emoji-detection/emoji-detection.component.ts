@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import type { FaceExpressions } from 'face-api.js';
 import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
@@ -25,7 +25,8 @@ const EXPRESSIONS: Array<Expression> = [
   selector: 'app-emoji-detection',
   templateUrl: './emoji-detection.component.html',
   styleUrls: ['./emoji-detection.component.scss'],
-  imports: [CameraDetectionComponent, EmojiComponent]
+  imports: [CameraDetectionComponent, EmojiComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmojiDetectionComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);

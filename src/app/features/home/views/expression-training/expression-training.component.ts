@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import type { FaceExpressions } from 'face-api.js';
 import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
@@ -24,7 +24,8 @@ const EXPRESSIONS: Array<Expression> = [
     selector: 'app-expression-training',
     templateUrl: './expression-training.component.html',
     styleUrls: ['./expression-training.component.scss'],
-    imports: [CameraDetectionComponent]
+    imports: [CameraDetectionComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);

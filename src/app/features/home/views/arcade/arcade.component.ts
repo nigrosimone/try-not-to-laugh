@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import type { FaceExpressions } from 'face-api.js';
 import type { Subscription } from 'rxjs';
@@ -19,7 +19,8 @@ const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
     CameraDetectionComponent,
     DecimalPipe,
     HumanizeTimePipe
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArcadeComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
