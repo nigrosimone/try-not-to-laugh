@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
-import type { FaceExpressions } from 'face-api.js';
+import type { FaceExpressions } from '@vladmandic/face-api';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { Emoji } from 'src/app/shared/components/emoji/emoji.component';
