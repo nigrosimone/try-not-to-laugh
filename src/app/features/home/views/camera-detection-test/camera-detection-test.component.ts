@@ -30,9 +30,10 @@ export class CameraDetectionTestComponent implements AfterViewInit {
   }
 
   doResize(): void {
+    const { clientWidth, clientHeight } = this.elRef.nativeElement;
     // -1 altrimenti esce la scrollbar
-    this.width.set(this.elRef.nativeElement.clientWidth - 1);
-    this.height.set(this.elRef.nativeElement.clientHeight - 1);
+    this.width.set(clientWidth - 1);
+    this.height.set(clientHeight - 1);
   }
 }
 
