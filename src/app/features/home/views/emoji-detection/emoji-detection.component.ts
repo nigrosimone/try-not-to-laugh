@@ -45,20 +45,12 @@ export class EmojiDetectionComponent implements AfterViewInit {
   });
   // emoji predominante
   public emojiHighlight = signal<keyof Emoji>(null);
-
   // true se l'espressione facciale è stata trovata nella webcam
   public faceDetected = signal(false);
   // se true l'espressione facciale è stata trovata almeno una volta
   public firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
   public detectionReady = signal(false);
-
-  // se true youtube e il riconoscimento facciale sono pronti
-  public allReady = signal(false);
-
-  // true se la partita può iniziare
-  public readyToGame = signal(false);
-
   // dimensioni dell'area di gioco
   public width = signal(0);
   public height = signal(0);
@@ -96,7 +88,6 @@ export class EmojiDetectionComponent implements AfterViewInit {
    * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
    */
   doThirdPartyOnReady(): void {
-    this.allReady.set(this.detectionReady());
     this.doResize();
   }
 
@@ -108,56 +99,48 @@ export class EmojiDetectionComponent implements AfterViewInit {
     // ridimensioniamo l'area di gioco
     this.doResize();
 
-    // faccia trovata?
-    if (e) {
-      // recuperiamo l'espressione predominante
-      let foundExpression: Expression = null;
-      for (const ex of EXPRESSIONS) {
-        const value: number = e[ex.expression] as number;
-        if (foundExpression) {
-          if (value > foundExpression.value) {
-            foundExpression = { expression: ex.expression, value };
-          }
-        } else {
-          if (value > 0) {
-            foundExpression = { expression: ex.expression, value };
-          }
-        }
-        if (value >= 0.99) {
-          break;
-        }
-      }
-
-      if (foundExpression) {
-        switch (foundExpression.expression) {
-          case 'angry':
-            this.emojiHighlight.set('angry');
-            break;
-          case 'happy':
-            this.emojiHighlight.set('haha');
-            break;
-          case 'sad':
-            this.emojiHighlight.set('sad');
-            break;
-          case 'surprised':
-            this.emojiHighlight.set('wow');
-            break;
-          default:
-            this.emojiHighlight.set(null);
-            break;
-        }
-      }
-
-      this.manageReadyToGameState();
+    // faccia non trovata
+    if (!e) {
+      return;
     }
-  }
 
-  /**
-   * Gestisce lo stato della partita (se è pronta per essere giocata o meno)
-   */
-  manageReadyToGameState(): void {
-    // può essere giocata se non è terminata e se abbiamo trovato la faccia
-    this.readyToGame.set(this.faceDetected())
+    // recuperiamo l'espressione predominante
+    let foundExpression: Expression = null;
+    for (const ex of EXPRESSIONS) {
+      const value: number = e[ex.expression] as number;
+      if (foundExpression) {
+        if (value > foundExpression.value) {
+          foundExpression = { expression: ex.expression, value };
+        }
+      } else {
+        if (value > 0) {
+          foundExpression = { expression: ex.expression, value };
+        }
+      }
+      if (value >= 0.99) {
+        break;
+      }
+    }
+
+    if (foundExpression) {
+      switch (foundExpression.expression) {
+        case 'angry':
+          this.emojiHighlight.set('angry');
+          break;
+        case 'happy':
+          this.emojiHighlight.set('haha');
+          break;
+        case 'sad':
+          this.emojiHighlight.set('sad');
+          break;
+        case 'surprised':
+          this.emojiHighlight.set('wow');
+          break;
+        default:
+          this.emojiHighlight.set(null);
+          break;
+      }
+    }
   }
 
   doResize(): void {
