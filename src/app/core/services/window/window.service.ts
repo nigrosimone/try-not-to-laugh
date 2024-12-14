@@ -1,18 +1,23 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable({ providedIn: 'root' })
-export class WindowService {
+export class WindowService implements OnDestroy {
 
-    private viewPortSubject: Subject<boolean>;
-    public readonly viewPortChanges: Observable<boolean>;
+    private viewPortSubject = new BehaviorSubject<boolean>(false);
+    public readonly viewPortChanges = this.viewPortSubject.asObservable();
+
+    private refResize = () => this.viewPortSubject.next(true);
+    private refOrientationChange = () => this.viewPortSubject.next(true);
 
     constructor() {
-        this.viewPortSubject = new BehaviorSubject<boolean>(false);
-        this.viewPortChanges = this.viewPortSubject.asObservable();
+        window.addEventListener('resize', this.refResize);
+        window.addEventListener('orientationchange', this.refOrientationChange);
+    }
 
-        window.addEventListener('resize', () => this.viewPortSubject.next(true));
-        window.addEventListener('orientationchange', () => this.viewPortSubject.next(true));
+    ngOnDestroy(): void {
+        window.removeEventListener('resize', this.refResize);
+        window.removeEventListener('orientationchange', this.refOrientationChange);
     }
 }
