@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
-import * as faceapi from 'face-api.js';
-import { Subscription } from 'rxjs';
+import type { FaceExpressions } from 'face-api.js';
+import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { Emoji } from 'src/app/shared/components/emoji/emoji.component';
@@ -8,7 +8,7 @@ import { safeUnsubscribe } from 'src/app/shared/utils/common';
 import { EmojiComponent } from '../../../../shared/components/emoji/emoji.component';
 
 interface Expression {
-  expression: keyof faceapi.FaceExpressions;
+  expression: keyof FaceExpressions;
   value: number;
 }
 
@@ -31,7 +31,6 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
-
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
@@ -66,12 +65,6 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
   public height = 0;
 
   private subVwChanges: Subscription;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-  constructor() {
-  }
 
   ngOnInit(): void {
     this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
@@ -116,7 +109,7 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
   /**
    * Evento di cambiamento del riconoscimento facciale
    */
-  onDetectionChanges(e: faceapi.FaceExpressions): void {
+  onDetectionChanges(e: FaceExpressions): void {
 
     // ridimensioniamo l'area di gioco
     this.doResize();

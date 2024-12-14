@@ -2,12 +2,11 @@
   <div class="info">
     @if (endMatch) {
       <div class="retry"><button class="retry-button" (click)="restartGame()"><h1>RIPROVA</h1></button></div>
-    }
-    @if (endMatch && loseMatch) {
-      <h1>Hai perso, hai sorriso!</h1>
-    }
-    @if (endMatch && winMatch) {
-      <h1>Hai vinto, non hai sorriso!</h1>
+      @if (loseMatch) {
+        <h1>Hai perso, hai sorriso!</h1>
+      } @else if (winMatch) {
+        <h1>Hai vinto, non hai sorriso!</h1>
+      }
     }
     @if (detectionReady && !endMatch && !faceDetected) {
       <h1>Non riesco a vedere la tua faccia!</h1>
@@ -23,7 +22,7 @@
     }
   </div>
   @if (!endMatch) {
-    <div class="youtube" [style.display]="!readyToGame ? 'none': 'flex'">
+    <div class="youtube">
       <app-youtube-player-wrapper [width]="width" [height]="height" [videoId]="videoId" [seek]="recordDuration" (ready)="onYoutubeReady($event)"
       (stateChange)="onStateChange($event)" #youtube></app-youtube-player-wrapper>
     </div>

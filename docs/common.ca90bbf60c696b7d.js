@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunktry_not_to_laugh=self.webpackChunktry_not_to_laugh||[]).push([[592],{531:(c,n,_)=>{_.d(n,{u:()=>u});var s=_(6814),a=_(9212);let u=(()=>{class t{static#t=this.\u0275fac=function(o){return new(o||t)};static#_=this.\u0275mod=a.oAB({type:t});static#a=this.\u0275inj=a.cJS({imports:[s.ez]})}return t})()}}]);

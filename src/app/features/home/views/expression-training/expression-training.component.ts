@@ -1,15 +1,16 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
-import * as faceapi from 'face-api.js';
-import { Subscription } from 'rxjs';
+import type { FaceExpressions } from 'face-api.js';
+import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { beep, randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
-import { CameraDetectionComponent as CameraDetectionComponent_1 } from '../../../../shared/components/camera-detection/camera-detection.component';
 
 interface Expression {
-  expression: keyof Omit<faceapi.FaceExpressions, 'neutral'>;
+  expression: keyof Omit<FaceExpressions, 'neutral'>;
   label: string;
 }
+
+const STORAGE_DURATION_KEY = 'expression-training-duration';
 
 const EXPRESSIONS: Array<Expression> = [
   { expression: 'happy', label: 'felice' },
@@ -23,13 +24,12 @@ const EXPRESSIONS: Array<Expression> = [
     selector: 'app-expression-training',
     templateUrl: './expression-training.component.html',
     styleUrls: ['./expression-training.component.scss'],
-    imports: [CameraDetectionComponent_1]
+    imports: [CameraDetectionComponent]
 })
 export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
-
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
@@ -70,9 +70,6 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   public matchDuration = 0;
 
   private subVwChanges: Subscription;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
 
   constructor() {
     this.recordDuration = this.getLocalStorageDuration();
@@ -121,7 +118,7 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
   /**
    * Evento di cambiamento del riconoscimento facciale
    */
-  onDetectionChanges(e: faceapi.FaceExpressions): void {
+  onDetectionChanges(e: FaceExpressions): void {
 
     // ridimensioniamo l'area di gioco
     this.doResize();
@@ -218,13 +215,13 @@ export class ExpressionTrainingComponent implements OnInit, OnDestroy {
    * Recupera dal localstorage il record di espressioni indovinate
    */
   getLocalStorageDuration(): number {
-    return +localStorage.getItem(`expression-training-duration`);
+    return +localStorage.getItem(STORAGE_DURATION_KEY);
   }
 
   /**
    * Setta nel localstorage il record di espressioni indovinate
    */
   setLocalStorageDuration(value: number): void {
-    localStorage.setItem(`expression-training-duration`, value.toString());
+    localStorage.setItem(STORAGE_DURATION_KEY, value.toString());
   }
 }

@@ -1,31 +1,30 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
-import * as faceapi from 'face-api.js';
-import { Subscription } from 'rxjs';
+import { DecimalPipe } from '@angular/common';
+import type { FaceExpressions } from 'face-api.js';
+import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
 import { randomItemFromArray, safeUnsubscribe } from 'src/app/shared/utils/common';
-import { DecimalPipe } from '@angular/common';
 import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize-time.pipe';
 
 const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
 
 @Component({
-    selector: 'app-arcade',
-    templateUrl: './arcade.component.html',
-    styleUrls: ['./arcade.component.scss'],
-    imports: [
-      YoutubePlayerWrapperComponent, 
-      CameraDetectionComponent, 
-      DecimalPipe, 
-      HumanizeTimePipe
-    ]
+  selector: 'app-arcade',
+  templateUrl: './arcade.component.html',
+  styleUrls: ['./arcade.component.scss'],
+  imports: [
+    YoutubePlayerWrapperComponent,
+    CameraDetectionComponent,
+    DecimalPipe,
+    HumanizeTimePipe
+  ]
 })
 export class ArcadeComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
-
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
   readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
@@ -135,7 +134,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   /**
    * Evento di cambiamento del riconoscimento facciale
    */
-  onDetectionChanges(e: faceapi.FaceExpressions): void {
+  onDetectionChanges(e: FaceExpressions): void {
 
     // ridimensioniamo l'area di gioco
     this.doResize();
@@ -206,12 +205,12 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   }
 
   restartGame(): void {
-      this.endMatch = false;
-      // riavviamo il video della webcam
-      this.cameraDetection().playVideo();
-      this.manageReadyToGameState();
-      this.recordDuration = this.getRecordStorageDuration();
-      this.cdr.markForCheck();
+    this.endMatch = false;
+    // riavviamo il video della webcam
+    this.cameraDetection().playVideo();
+    this.manageReadyToGameState();
+    this.recordDuration = this.getRecordStorageDuration();
+    this.cdr.markForCheck();
   }
 
   /**
@@ -256,7 +255,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   /**
    * Recupera il valore record
    */
-  getRecordStorageDuration(): number{
+  getRecordStorageDuration(): number {
     return +localStorage.getItem(`arcade-record-duration`);
   }
 

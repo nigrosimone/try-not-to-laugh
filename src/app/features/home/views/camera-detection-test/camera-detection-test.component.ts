@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
-import { Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { safeUnsubscribe } from 'src/app/shared/utils/common';
 import { CameraDetectionComponent } from '../../../../shared/components/camera-detection/camera-detection.component';
