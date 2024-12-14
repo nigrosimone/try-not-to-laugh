@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import type { FaceExpressions } from 'face-api.js';
-import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { YoutubePlayerWrapperComponent } from 'src/app/shared/components/youtube-player-wrapper/youtube-player-wrapper.component';
@@ -10,6 +9,7 @@ import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
+const LOCAL_STORAGE_KEY_RECORD = `arcade-record-duration`;
 
 @Component({
   selector: 'app-arcade',
@@ -27,7 +27,6 @@ export class ArcadeComponent implements OnInit {
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
   private destroyRef = inject(DestroyRef);
-
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
   readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
@@ -70,8 +69,6 @@ export class ArcadeComponent implements OnInit {
   // dimensioni dell'area di gioco
   public width = signal(0);
   public height = signal(0);
-
-  private subVwChanges: Subscription;
 
   constructor() {
     this.recordDuration.set(this.getRecordStorageDuration());
@@ -239,17 +236,16 @@ export class ArcadeComponent implements OnInit {
    * Recupera il valore record
    */
   getRecordStorageDuration(): number {
-    return +localStorage.getItem(`arcade-record-duration`);
+    return +localStorage.getItem(LOCAL_STORAGE_KEY_RECORD);
   }
 
   /**
    * Setta il valore del record
    */
   setRecordStorageDuration(value: number): void {
-    const key = `arcade-record-duration`;
-    const record: number = +localStorage.getItem(key);
+    const record: number = +localStorage.getItem(LOCAL_STORAGE_KEY_RECORD);
     if (value > record) {
-      localStorage.setItem(key, value.toString());
+      localStorage.setItem(LOCAL_STORAGE_KEY_RECORD, value.toString());
     }
   }
 }
