@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestro
 import * as faceapi from '@vladmandic/face-api';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+export type FaceExpressions = faceapi.FaceExpressions;
 @Component({
   selector: 'app-camera-detection',
   templateUrl: './camera-detection.component.html',
@@ -23,7 +24,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   readonly enableLandmarks = input(false);
 
   readonly detectionReady = output<boolean>();
-  readonly detectionChanges = output<faceapi.FaceExpressions>();
+  readonly detectionChanges = output<FaceExpressions>();
   readonly firstDetection = output<boolean>();
   readonly detectionFace = output<boolean>();
 
@@ -43,7 +44,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   private faceDetectionReady = false;
 
   // timer
-  private timer;
+  private timer: ReturnType<typeof setTimeout>;
 
   ngOnDestroy(): void {
     if (this.stream) {
@@ -57,10 +58,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   private async run(): Promise<void> {
     this.loading.set(true);
-
-    // avviamo lo stream del webcam
-    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-    this.video().nativeElement.srcObject = this.stream;
 
     let URI = '/assets/weights/';
     if (document.location.hostname.includes('github.io')) {
@@ -79,6 +76,10 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     if (this.enableLandmarks()) {
       models.push(faceapi.nets.faceLandmark68Net.loadFromUri(URI));
     }
+
+    // avviamo lo stream del webcam
+    this.stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+    this.video().nativeElement.srcObject = this.stream;
 
     await Promise.all(models);
 
@@ -156,7 +157,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
           } else {
             return;
           }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           return;
         }
