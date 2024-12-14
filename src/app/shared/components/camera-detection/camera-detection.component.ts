@@ -16,8 +16,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   readonly detectionTimer = input(0);
   readonly drawDetection = input(false);
-  readonly width = input<number>(undefined);
-  readonly height = input<number>(undefined);
+  readonly width = input<number>(0);
+  readonly height = input<number>(0);
   readonly missingLimit = input(10);
   readonly enableFaceAndGender = input(false);
   readonly enableLandmarks = input(false);
@@ -89,7 +89,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     const videoEl = this.video().nativeElement;
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
-    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading) {
+    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading()) {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => this.onPlay(), this.detectionTimer());
       return;

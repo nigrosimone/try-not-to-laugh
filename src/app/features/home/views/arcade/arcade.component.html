@@ -1,33 +1,33 @@
-<div class="game-container" [style.width.px]="width" [style.height.px]="height">
+<div class="game-container" [style.width.px]="width()" [style.height.px]="height()">
   <div class="info">
-    @if (endMatch) {
+    @if (endMatch()) {
       <div class="retry"><button class="retry-button" (click)="restartGame()"><h1>RIPROVA</h1></button></div>
-      @if (loseMatch) {
+      @if (loseMatch()) {
         <h1>Hai perso, hai sorriso!</h1>
       } @else if (winMatch) {
         <h1>Hai vinto, non hai sorriso!</h1>
       }
     }
-    @if (detectionReady && !endMatch && !faceDetected) {
+    @if (detectionReady() && !endMatch() && !faceDetected()) {
       <h1>Non riesco a vedere la tua faccia!</h1>
     }
-    @if (faceDetected || endMatch) {
+    @if (faceDetected() || endMatch()) {
       <div class="badge-container">
-        <span class="badge badge-happy" [style.background]="happy > 0.3 ? 'red' : 'green'">Felicità: {{ (happy * 100) | number:'1.1-1' }}%</span>
-        <span class="badge badge-duration" [style.background]="timeElapse > recordDuration ? 'green' : 'blue'">Resistenza: {{ (timeElapse * 1000) | humanizeTime }}</span>
-        @if (recordDuration) {
-          <span class="badge badge-record-duration">Record: {{ (recordDuration * 1000) | humanizeTime }}</span>
+        <span class="badge badge-happy" [style.background]="happy() > 0.3 ? 'red' : 'green'">Felicità: {{ (happy() * 100) | number:'1.1-1' }}%</span>
+        <span class="badge badge-duration" [style.background]="timeElapse() > recordDuration() ? 'green' : 'blue'">Resistenza: {{ (timeElapse() * 1000) | humanizeTime }}</span>
+        @if (recordDuration()) {
+          <span class="badge badge-record-duration">Record: {{ (recordDuration() * 1000) | humanizeTime }}</span>
         }
       </div>
     }
   </div>
-  @if (!endMatch) {
+  @if (!endMatch()) {
     <div class="youtube">
-      <app-youtube-player-wrapper [width]="width" [height]="height" [videoId]="videoId" [seek]="recordDuration" (ready)="onYoutubeReady($event)"
+      <app-youtube-player-wrapper [width]="width()" [height]="height()" [videoId]="videoId()" [seek]="recordDuration()" (ready)="onYoutubeReady($event)"
       (stateChange)="onStateChange($event)" #youtube></app-youtube-player-wrapper>
     </div>
   }
-  <div class="webcam" [style.display]="readyToGame ? 'none': 'flex'">
-    <app-camera-detection [width]="width" [height]="height" [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+  <div class="webcam" [style.display]="readyToGame() ? 'none': 'flex'">
+    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="false" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
   </div>
 </div>

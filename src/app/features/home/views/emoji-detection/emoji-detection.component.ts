@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import type { FaceExpressions } from 'face-api.js';
-import type { Subscription } from 'rxjs';
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from 'src/app/shared/components/camera-detection/camera-detection.component';
 import { Emoji } from 'src/app/shared/components/emoji/emoji.component';
-import { safeUnsubscribe } from 'src/app/shared/utils/common';
 import { EmojiComponent } from '../../../../shared/components/emoji/emoji.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface Expression {
   expression: keyof FaceExpressions;
@@ -28,8 +27,8 @@ const EXPRESSIONS: Array<Expression> = [
   imports: [CameraDetectionComponent, EmojiComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmojiDetectionComponent implements OnInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
+export class EmojiDetectionComponent implements AfterViewInit {
+  private destroyRef = inject(DestroyRef);
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
 
@@ -49,39 +48,33 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
   public emojiHighlight: keyof Emoji;
 
   // true se l'espressione facciale è stata trovata nella webcam
-  public faceDetected = false;
+  public faceDetected = signal(false);
   // se true l'espressione facciale è stata trovata almeno una volta
   public firstDetectionHappen = false;
   // se true il riconoscimento facciale è pronto
-  public detectionReady = false;
+  public detectionReady = signal(false);
 
   // se true youtube e il riconoscimento facciale sono pronti
-  public allReady = false;
+  public allReady = signal(false);
 
   // true se la partita può iniziare
-  public readyToGame = false;
+  public readyToGame = signal(false);
 
   // dimensioni dell'area di gioco
-  public width = 0;
-  public height = 0;
+  public width = signal(0);
+  public height = signal(0);
 
-  private subVwChanges: Subscription;
-
-  ngOnInit(): void {
-    this.subVwChanges = this.windowService.viewPortChanges.subscribe(() => {
+  ngAfterViewInit(): void {
+    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.doResize();
     });
-  }
-
-  ngOnDestroy(): void {
-    safeUnsubscribe(this.subVwChanges);
   }
 
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
   onDetectionReady(_: boolean): void {
-    this.detectionReady = true;
+    this.detectionReady.set(true);
     this.doThirdPartyOnReady();
   }
 
@@ -96,14 +89,14 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
    * Evento ad ogni cambiamento di stato (trovata/non trovata la faccia)
    */
   onDetectionFace(e: boolean): void {
-    this.faceDetected = e;
+    this.faceDetected.set(e);
   }
 
   /**
    * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
    */
   doThirdPartyOnReady(): void {
-    this.allReady = this.detectionReady;
+    this.allReady.set(this.detectionReady());
     this.doResize();
   }
 
@@ -161,22 +154,12 @@ export class EmojiDetectionComponent implements OnInit, OnDestroy {
    */
   manageReadyToGameState(): void {
     // può essere giocata se non è terminata e se abbiamo trovato la faccia
-    const readyToGame = this.faceDetected;
-    if (this.readyToGame !== readyToGame) {
-      this.readyToGame = readyToGame;
-      this.cdr.markForCheck();
-    }
+    this.readyToGame.set(this.faceDetected())
   }
 
   doResize(): void {
     // -1 altrimenti esce la scrollbar
-    const w = this.elRef.nativeElement.clientWidth - 1;
-    const h = this.elRef.nativeElement.clientHeight - 1;
-
-    if (w !== this.width || h !== this.height) {
-      this.width = w;
-      this.height = h;
-      this.cdr.markForCheck();
-    }
+    this.width.set(this.elRef.nativeElement.clientWidth - 1);
+    this.height.set(this.elRef.nativeElement.clientHeight - 1);
   }
 }

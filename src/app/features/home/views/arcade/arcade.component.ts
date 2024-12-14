@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, inject, signal, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import type { FaceExpressions } from 'face-api.js';
 import type { Subscription } from 'rxjs';
@@ -23,7 +23,6 @@ const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArcadeComponent implements OnInit, OnDestroy {
-  private cdr = inject(ChangeDetectorRef);
   private windowService = inject(WindowService);
   private elRef = inject(ElementRef);
 
@@ -31,48 +30,48 @@ export class ArcadeComponent implements OnInit, OnDestroy {
   readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
 
   // id del video di youtube
-  public videoId = randomItemFromArray<string>(VIDEOS);
+  public videoId = signal(randomItemFromArray<string>(VIDEOS));
 
   // true se l'espressione facciale è stata trovata nella webcam
-  public faceDetected = false;
+  public faceDetected = signal(false);
   // se true l'espressione facciale è stata trovata almeno una volta
-  public firstDetectionHappen = false;
+  public firstDetectionHappen = signal(false);
   // se true il riconoscimento facciale è pronto
-  public detectionReady = false;
+  public detectionReady = signal(false);
 
   // se true youtube e il riconoscimento facciale sono pronti
-  public allReady = false;
+  public allReady = signal(false);
 
   // partita terminata
-  public endMatch = false;
+  public endMatch = signal(false);
   // partita terminata come persa
-  public loseMatch = false;
+  public loseMatch = signal(false);
   // partita terminata come vinta
-  public winMatch = false;
+  public winMatch = signal(false);
 
   // valore di felicità dell'espressione facciale
-  public happy = 0;
+  public happy = signal(0);
 
   // true se la partita può iniziare
-  public readyToGame = false;
+  public readyToGame = signal(false);
 
   // true se il player video di youtube è stato caricato
-  public youtubeReady = false;
+  public youtubeReady = signal(false);
 
   // secondi visti del video di youtube
-  public timeElapse = 0;
+  public timeElapse = signal(0);
 
   // massimo di secondi visti del video di youtube
-  public recordDuration = 0;
+  public recordDuration = signal(0);
 
   // dimensioni dell'area di gioco
-  public width = 0;
-  public height = 0;
+  public width = signal(0);
+  public height = signal(0);
 
   private subVwChanges: Subscription;
 
   constructor() {
-    this.recordDuration = this.getRecordStorageDuration();
+    this.recordDuration.set(this.getRecordStorageDuration());
   }
 
   ngOnInit(): void {
@@ -98,7 +97,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Evento di caricamento completato del player di YouTube
    */
   onYoutubeReady(e: YT.PlayerEvent): void {
-    this.youtubeReady = true;
+    this.youtubeReady.set(true);
     this.doThirdPartyOnReady();
   }
 
@@ -106,7 +105,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Evento di caricamento completato del riconoscimento facciale
    */
   onDetectionReady(e: boolean): void {
-    this.detectionReady = true;
+    this.detectionReady.set(true);
     this.doThirdPartyOnReady();
   }
 
@@ -114,7 +113,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
    */
   doThirdPartyOnReady(): void {
-    this.allReady = this.youtubeReady && this.detectionReady;
+    this.allReady.set(this.youtubeReady() && this.detectionReady());
     this.doResize();
   }
 
@@ -122,14 +121,14 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Evento scatenato al primo riconoscimento facciale
    */
   onFirstDetection(e: boolean): void {
-    this.firstDetectionHappen = e;
+    this.firstDetectionHappen.set(e);
   }
 
   /**
    * Evento ad ogni cambiamento di stato (trovata/non trovata la faccia)
    */
   onDetectionFace(e: boolean): void {
-    this.faceDetected = e;
+    this.faceDetected.set(e);
   }
 
   /**
@@ -141,32 +140,27 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     this.doResize();
 
     // se il player di youtube non  è pronto non facciamo nient'altro
-    if (!this.youtubeReady) {
+    if (!this.youtubeReady()) {
       return;
     }
 
     // faccia trovata?
     if (e) {
-      const happy = e.happy;
-      if (this.happy !== happy) {
-        this.happy = happy;
-        this.cdr.markForCheck();
-      }
+      this.happy.set(e.happy)
+
       // se la felicità è maggiore di ... ha perso
-      if (this.happy > 0.8) {
+      if (this.happy() > 0.8) {
         this.endGame(false);
         return;
       }
     } else {
       // faccia non trovata...
-      this.happy = 0;
+      this.happy.set(0);
     }
 
     // recuperiamo il tempo di esecuzione del video di youtube
     const timeElapse = this.youtube().getCurrentTimeIntSeeked();
-    if (this.timeElapse !== timeElapse) {
-      this.timeElapse = timeElapse;
-    }
+    this.timeElapse.set(timeElapse)
 
     this.manageDetectionState();
   }
@@ -178,7 +172,7 @@ export class ArcadeComponent implements OnInit, OnDestroy {
     this.manageReadyToGameState();
     // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube,
     // questo perchè il video parte in autoplay la prima volta
-    if (!this.faceDetected || !document.hasFocus()) {
+    if (!this.faceDetected() || !document.hasFocus()) {
       this.youtube().pauseVideo();
     } else {
       this.youtube().playVideo();
@@ -189,10 +183,10 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    * Termina la partita
    */
   endGame(userWin: boolean): void {
-    if (!this.endMatch) {
-      this.winMatch = userWin;
-      this.loseMatch = !this.winMatch;
-      this.endMatch = true;
+    if (!this.endMatch()) {
+      this.winMatch.set(userWin);
+      this.loseMatch.set(!this.winMatch());
+      this.endMatch.set(true);
       // mettiamo in pausa il video della webcam
       this.cameraDetection().pauseVideo();
       // fermiamo il video di youtube
@@ -200,18 +194,16 @@ export class ArcadeComponent implements OnInit, OnDestroy {
       // facciamo vibrare il cellulare
       window.navigator.vibrate(200);
       this.manageReadyToGameState();
-      this.cdr.markForCheck();
-      this.setLocalStorageDuration(this.timeElapse);
+      this.setLocalStorageDuration(this.timeElapse());
     }
   }
 
   restartGame(): void {
-    this.endMatch = false;
+    this.endMatch.set(false);
     // riavviamo il video della webcam
     this.cameraDetection().playVideo();
     this.manageReadyToGameState();
-    this.recordDuration = this.getRecordStorageDuration();
-    this.cdr.markForCheck();
+    this.recordDuration.set(this.getRecordStorageDuration());
   }
 
   /**
@@ -219,23 +211,14 @@ export class ArcadeComponent implements OnInit, OnDestroy {
    */
   manageReadyToGameState(): void {
     // può essere giocata se non è terminata e se abbiamo trovato la faccia
-    const readyToGame = !this.endMatch && this.faceDetected;
-    if (this.readyToGame !== readyToGame) {
-      this.readyToGame = readyToGame;
-      this.cdr.markForCheck();
-    }
+    const readyToGame = !this.endMatch() && this.faceDetected();
+    this.readyToGame.set(readyToGame)
   }
 
   doResize(): void {
     // -1 altrimenti esce la scrollbar
-    const w = this.elRef.nativeElement.clientWidth - 1;
-    const h = this.elRef.nativeElement.clientHeight - 1;
-
-    if (w !== this.width || h !== this.height) {
-      this.width = w;
-      this.height = h;
-      this.cdr.markForCheck();
-    }
+    this.width.set(this.elRef.nativeElement.clientWidth - 1);
+    this.height.set(this.elRef.nativeElement.clientHeight - 1);
   }
 
   /**

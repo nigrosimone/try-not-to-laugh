@@ -1,12 +1,12 @@
-<div class="game-container" [style.width.px]="width" [style.height.px]="height">
+<div class="game-container" [style.width.px]="width()" [style.height.px]="height()">
   <div class="info">
-    @if (detectionReady && !faceDetected) {
+    @if (detectionReady() && !faceDetected()) {
       <h1>Non riesco a vedere la tua faccia!</h1>
     }
   </div>
   <div class="webcam">
-    <app-camera-detection [width]="width" [height]="height" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
-    @if (detectionReady && faceDetected) {
+    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="true" [detectionTimer]="100" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+    @if (detectionReady() && faceDetected()) {
       <app-emoji class="emoji" [emojiEnabled]="emojiEnabled" [emojiHighlight]="emojiHighlight"></app-emoji>
     }
   </div>

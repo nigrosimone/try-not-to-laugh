@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop"
 import { WindowService } from 'src/app/core/services/window/windos.service';
 import { CameraDetectionComponent } from '../../../../shared/components/camera-detection/camera-detection.component';
@@ -10,15 +10,16 @@ import { CameraDetectionComponent } from '../../../../shared/components/camera-d
   imports: [CameraDetectionComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CameraDetectionTestComponent {
+export class CameraDetectionTestComponent implements AfterViewInit {
   private destroyRef = inject(DestroyRef);
   private windowService = inject(WindowService);
-  private elRef: ElementRef<HTMLElement> = inject(ElementRef);
+  private elRef = inject(ElementRef);
 
-  public width = signal<number>(null);
-  public height = signal<number>(null);
+  public width = signal<number>(0);
+  public height = signal<number>(0);
 
-  constructor() {
+
+  ngAfterViewInit(): void {
     this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.doResize();
     });
