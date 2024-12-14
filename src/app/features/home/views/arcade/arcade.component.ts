@@ -201,14 +201,14 @@ export class ArcadeComponent implements OnInit {
    * Recupera dal localstorage l'ultima durata del video corrente
    */
   getLocalStorageDuration(): number {
-    return +localStorage.getItem(`arcade-${this.videoId}-duration`);
+    return +localStorage.getItem(`arcade-${this.videoId()}-duration`);
   }
 
   /**
    * Setta nel localstorage l'ultima durata del video corrente
    */
   setLocalStorageDuration(value: number): void {
-    localStorage.setItem(`arcade-${this.videoId}-duration`, value.toString());
+    localStorage.setItem(`arcade-${this.videoId()}-duration`, value.toString());
     this.setRecordStorageDuration(value);
   }
 
