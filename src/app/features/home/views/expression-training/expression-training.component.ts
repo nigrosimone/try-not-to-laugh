@@ -78,6 +78,7 @@ export class ExpressionTrainingComponent implements OnInit {
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onDetectionReady(_: boolean): void {
     this.detectionReady.set(true);
     this.doThirdPartyOnReady();

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 // tslint:disable-next-line: ban-types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const gtag: any;
 @Component({
   selector: 'app-root',

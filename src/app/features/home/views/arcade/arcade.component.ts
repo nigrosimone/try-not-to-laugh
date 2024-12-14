@@ -92,6 +92,7 @@ export class ArcadeComponent implements OnInit {
   /**
    * Evento di caricamento completato del player di YouTube
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onYoutubeReady(e: YT.PlayerEvent): void {
     this.youtubeReady.set(true);
     this.doThirdPartyOnReady();
@@ -100,6 +101,7 @@ export class ArcadeComponent implements OnInit {
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onDetectionReady(e: boolean): void {
     this.detectionReady.set(true);
     this.doThirdPartyOnReady();

@@ -101,8 +101,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       this.detectionReady.emit(this.faceDetectionReady);
     }
 
-
     // cerchiamo l'espressione della faccia nel video della webcam
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let detectSingleFace: any;
 
     const enableLandmarks = this.enableLandmarks();
@@ -112,6 +112,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let withFace: any;
 
     const enableFaceAndGender = this.enableFaceAndGender();
@@ -155,14 +156,15 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
           } else {
             return;
           }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           return;
         }
 
         faceapi.draw.drawDetections(canvas, resizedResult);
-        faceapi.draw.drawFaceExpressions(canvas, resizedResult as any, 0.05);
+        faceapi.draw.drawFaceExpressions(canvas, resizedResult, 0.05);
         if (enableLandmarks) {
-          faceapi.draw.drawFaceLandmarks(canvas, resizedResult as any);
+          faceapi.draw.drawFaceLandmarks(canvas, resizedResult);
         }
         if (enableFaceAndGender) {
           const { age, gender, genderProbability } = resizedResult;
