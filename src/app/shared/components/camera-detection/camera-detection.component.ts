@@ -50,6 +50,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   // timer
   private timer: number;
 
+  private tinyFaceDetectorOptions = new TinyFaceDetectorOptions()
+
   ngOnDestroy(): void {
     cancelAnimationFrame(this.timer);
     if (this.stream) {
@@ -107,7 +109,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     const enableLandmarks = this.enableLandmarks();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let _detectSingleFace: any = detectSingleFace(videoEl, new TinyFaceDetectorOptions())
+    let _detectSingleFace: any = detectSingleFace(videoEl, this.tinyFaceDetectorOptions)
     if (enableLandmarks) {
       _detectSingleFace = _detectSingleFace.withFaceLandmarks();
     }
