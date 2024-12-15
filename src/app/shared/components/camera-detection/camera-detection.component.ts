@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, input, output, signal, viewChild } from '@angular/core';
-import * as faceapi from '@vladmandic/face-api';
+import { draw, detectSingleFace, TinyFaceDetectorOptions, nets, FaceExpressions, matchDimensions, resizeResults } from '@vladmandic/face-api';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
-export type FaceExpressions = faceapi.FaceExpressions;
+export { FaceExpressions };
 
 let URI = '/assets/weights/';
 if (document.location.hostname.includes('github.io')) {
@@ -65,16 +65,16 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     this.loading.set(true);
 
     const models = [
-      faceapi.nets.tinyFaceDetector.loadFromUri(URI),
-      faceapi.nets.faceRecognitionNet.loadFromUri(URI),
-      faceapi.nets.faceExpressionNet.loadFromUri(URI),
+      nets.tinyFaceDetector.loadFromUri(URI),
+      nets.faceRecognitionNet.loadFromUri(URI),
+      nets.faceExpressionNet.loadFromUri(URI),
     ];
 
     if (this.enableFaceAndGender()) {
-      models.push(faceapi.nets.ageGenderNet.loadFromUri(URI));
+      models.push(nets.ageGenderNet.loadFromUri(URI));
     }
     if (this.enableLandmarks()) {
-      models.push(faceapi.nets.faceLandmark68Net.loadFromUri(URI));
+      models.push(nets.faceLandmark68Net.loadFromUri(URI));
     }
 
     // avviamo lo stream del webcam
@@ -87,10 +87,11 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   protected async onPlay(): Promise<void> {
+
     const videoEl = this.video().nativeElement;
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
-    if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading()) {
+    if (videoEl.paused || videoEl.ended || !nets.tinyFaceDetector.params || this.loading()) {
       cancelAnimationFrame(this.timer)
       this.timer = requestAnimationFrame(() => this.onPlay());
       return;
@@ -106,13 +107,13 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     const enableLandmarks = this.enableLandmarks();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let detectSingleFace: any = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
+    let _detectSingleFace: any = detectSingleFace(videoEl, new TinyFaceDetectorOptions())
     if (enableLandmarks) {
-      detectSingleFace = detectSingleFace.withFaceLandmarks();
+      _detectSingleFace = _detectSingleFace.withFaceLandmarks();
     }
 
     const enableFaceAndGender = this.enableFaceAndGender();
-    let withFace = detectSingleFace.withFaceExpressions();
+    let withFace = _detectSingleFace.withFaceExpressions();
     if (enableFaceAndGender) {
       withFace = withFace.withAgeAndGender();
     }
@@ -142,12 +143,12 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
         // visualizziamo il canvas e posizioniamolo sul video
         canvas.style.display = 'block';
         const rect = videoEl.getBoundingClientRect();
-        const dims = faceapi.matchDimensions(canvas, rect, true);
+        const dims = matchDimensions(canvas, rect, true);
 
         let resizedResult;
         try {
           if (dims && dims.height > 0 && dims.width > 0) {
-            resizedResult = faceapi.resizeResults(result, dims);
+            resizedResult = resizeResults(result, dims);
           } else {
             return;
           }
@@ -156,14 +157,14 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
           return;
         }
 
-        faceapi.draw.drawDetections(canvas, resizedResult);
-        faceapi.draw.drawFaceExpressions(canvas, resizedResult, 0.05);
+        draw.drawDetections(canvas, resizedResult);
+        draw.drawFaceExpressions(canvas, resizedResult, 0.05);
         if (enableLandmarks) {
-          faceapi.draw.drawFaceLandmarks(canvas, resizedResult);
+          draw.drawFaceLandmarks(canvas, resizedResult);
         }
         if (enableFaceAndGender) {
           const { age, gender, genderProbability } = resizedResult;
-          new faceapi.draw.DrawTextField(
+          new draw.DrawTextField(
             [
               `${Math.round(age)} years`,
               `${gender} (${Math.round(genderProbability * 100)} %)`
