@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
+import { SelectGameComponent } from './views/select-game/select-game.component';
 
 export const routes: Routes = [
   {
@@ -8,7 +9,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./views/select-game/select-game-routing').then(m => m.routes)
+        component: SelectGameComponent
       },
       {
         path: 'camera-detection',
