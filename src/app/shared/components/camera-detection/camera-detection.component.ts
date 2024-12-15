@@ -46,10 +46,10 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   private timer: number;
 
   ngOnDestroy(): void {
+    cancelAnimationFrame(this.timer);
     if (this.stream) {
       this.stream.getTracks().forEach(track => track.stop());
     }
-    cancelAnimationFrame(this.timer);
   }
 
   ngAfterViewInit(): void {
