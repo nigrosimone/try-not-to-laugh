@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
+import { MatListOption, MatSelectionList } from '@angular/material/list';
+import { MatIcon } from '@angular/material/icon';
 import { take } from 'rxjs';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import { DialogAlertService } from 'src/app/shared/components/dialog-alert/dialog-alert.service';
@@ -15,7 +15,7 @@ const DIALOG_DESC_EMOJIDETECTION = 'In questa demo la tua espressione viene util
   selector: 'app-select-game',
   templateUrl: './select-game.component.html',
   styleUrls: ['./select-game.component.scss'],
-  imports: [MatListModule, MatIconModule],
+  imports: [MatListOption, MatIcon, MatSelectionList],
   providers: [DialogAlertService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

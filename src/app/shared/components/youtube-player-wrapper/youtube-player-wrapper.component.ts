@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
-import { YouTubePlayer, YouTubePlayerModule, YOUTUBE_PLAYER_CONFIG } from '@angular/youtube-player';
+import { YouTubePlayer, YOUTUBE_PLAYER_CONFIG } from '@angular/youtube-player';
 
 const PLAYER_VARS = {
   autoplay: 0,
@@ -17,7 +17,7 @@ const PLAYER_VARS = {
   templateUrl: './youtube-player-wrapper.component.html',
   styleUrls: ['./youtube-player-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [YouTubePlayerModule],
+  imports: [YouTubePlayer],
   providers: [{
     provide: YOUTUBE_PLAYER_CONFIG,
     useValue: {

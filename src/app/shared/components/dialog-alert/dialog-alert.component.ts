@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
-import {CdkScrollableModule } from '@angular/cdk/scrolling';
-import { MatButtonModule } from '@angular/material/button';
+import {CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 export interface DialogAlertData {
   title: string;
@@ -12,7 +12,7 @@ export interface DialogAlertData {
 @Component({
     selector: 'app-dialog-alert',
     templateUrl: 'dialog-alert.component.html',
-    imports: [MatDialogModule, CdkScrollableModule, MatButtonModule],
+    imports: [MatDialogModule, CdkScrollable, MatButton],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DialogAlertComponent {

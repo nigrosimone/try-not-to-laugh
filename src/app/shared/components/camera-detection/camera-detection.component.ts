@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, input, output, signal, viewChild } from '@angular/core';
 import * as faceapi from '@vladmandic/face-api';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export type FaceExpressions = faceapi.FaceExpressions;
 
@@ -12,7 +12,7 @@ if (document.location.hostname.includes('github.io')) {
   selector: 'app-camera-detection',
   templateUrl: './camera-detection.component.html',
   styleUrls: ['./camera-detection.component.scss'],
-  imports: [MatProgressSpinnerModule],
+  imports: [MatProgressSpinner],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CameraDetectionComponent implements AfterViewInit, OnDestroy {

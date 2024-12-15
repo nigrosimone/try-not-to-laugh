@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RoutingService } from 'src/app/core/services/routing/routing.service';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { RouterOutlet } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
 
 
 @Component({
@@ -13,8 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     ToolbarComponent, 
     RouterOutlet, 
-    MatButtonModule,
-    MatTooltipModule
+    MatButton,
+    MatTooltip
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
