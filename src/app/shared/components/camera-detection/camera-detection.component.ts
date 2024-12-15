@@ -107,10 +107,10 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     let detectSingleFace: any;
 
     const enableLandmarks = this.enableLandmarks();
+    
+    detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
     if (enableLandmarks) {
-      detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
-    } else {
-      detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
+      detectSingleFace = detectSingleFace.withFaceLandmarks();
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
