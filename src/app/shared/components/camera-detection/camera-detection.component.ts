@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, input, output, signal, viewChild } from '@angular/core';
-import { draw, detectSingleFace, TinyFaceDetectorOptions, nets, FaceExpressions, matchDimensions, resizeResults } from '@vladmandic/face-api';
+import { draw, detectSingleFace, TinyFaceDetectorOptions, nets, type FaceDetection, type FaceExpressions, type DetectSingleFaceTask, type DetectSingleFaceLandmarksTask, matchDimensions, resizeResults } from '@vladmandic/face-api';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 export { FaceExpressions };
@@ -109,13 +109,14 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     const enableLandmarks = this.enableLandmarks();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let _detectSingleFace: any = detectSingleFace(videoEl, this.tinyFaceDetectorOptions)
+    let _detectSingleFace: DetectSingleFaceTask | DetectSingleFaceLandmarksTask<{detection: FaceDetection}> = detectSingleFace(videoEl, this.tinyFaceDetectorOptions)
     if (enableLandmarks) {
       _detectSingleFace = _detectSingleFace.withFaceLandmarks();
     }
 
     const enableFaceAndGender = this.enableFaceAndGender();
-    let withFace = _detectSingleFace.withFaceExpressions();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let withFace: any = _detectSingleFace.withFaceExpressions();
     if (enableFaceAndGender) {
       withFace = withFace.withAgeAndGender();
     }
