@@ -1,57 +1,57 @@
-@if (emojiEnabled()?.like) {
-  <div class="emoji emoji--like" [class.highlight]="emojiHighlight() === 'like'">
-    <div class="emoji__hand">
-      <div class="emoji__thumb"></div>
+@if (emojiEnabled().like) {
+<div class="emoji emoji--like" [class.highlight]="emojiHighlight() === 'like'">
+  <div class="emoji__hand">
+    <div class="emoji__thumb"></div>
+  </div>
+</div>
+} 
+@if (emojiEnabled().love) {
+<div class="emoji emoji--love" [class.highlight]="emojiHighlight() === 'love'">
+  <div class="emoji__heart"></div>
+</div>
+} 
+@if (emojiEnabled().haha) {
+<div class="emoji emoji--haha" [class.highlight]="emojiHighlight() === 'haha'">
+  <div class="emoji__face">
+    <div class="emoji__eyes"></div>
+    <div class="emoji__mouth">
+      <div class="emoji__tongue"></div>
     </div>
   </div>
-}
-@if (emojiEnabled()?.love) {
-  <div class="emoji emoji--love" [class.highlight]="emojiHighlight() === 'love'">
-    <div class="emoji__heart"></div>
+</div>
+} 
+@if (emojiEnabled().yay) {
+<div class="emoji emoji--yay" [class.highlight]="emojiHighlight() === 'yay'">
+  <div class="emoji__face">
+    <div class="emoji__eyebrows"></div>
+    <div class="emoji__mouth"></div>
   </div>
-}
-@if (emojiEnabled()?.haha) {
-  <div class="emoji emoji--haha" [class.highlight]="emojiHighlight() === 'haha'">
-    <div class="emoji__face">
-      <div class="emoji__eyes"></div>
-      <div class="emoji__mouth">
-        <div class="emoji__tongue"></div>
-      </div>
-    </div>
+</div>
+} 
+@if (emojiEnabled().wow) {
+<div class="emoji emoji--wow" [class.highlight]="emojiHighlight() === 'wow'">
+  <div class="emoji__face">
+    <div class="emoji__eyebrows"></div>
+    <div class="emoji__eyes"></div>
+    <div class="emoji__mouth"></div>
   </div>
-}
-@if (emojiEnabled()?.yay) {
-  <div class="emoji emoji--yay" [class.highlight]="emojiHighlight() === 'yay'">
-    <div class="emoji__face">
-      <div class="emoji__eyebrows"></div>
-      <div class="emoji__mouth"></div>
-    </div>
+</div>
+} 
+@if (emojiEnabled().sad) {
+<div class="emoji emoji--sad" [class.highlight]="emojiHighlight() === 'sad'">
+  <div class="emoji__face">
+    <div class="emoji__eyebrows"></div>
+    <div class="emoji__eyes"></div>
+    <div class="emoji__mouth"></div>
   </div>
+</div>
 }
-@if (emojiEnabled()?.wow) {
-  <div class="emoji emoji--wow" [class.highlight]="emojiHighlight() === 'wow'">
-    <div class="emoji__face">
-      <div class="emoji__eyebrows"></div>
-      <div class="emoji__eyes"></div>
-      <div class="emoji__mouth"></div>
-    </div>
+@if (emojiEnabled().angry) {
+<div class="emoji emoji--angry" [class.highlight]="emojiHighlight() === 'angry'">
+  <div class="emoji__face">
+    <div class="emoji__eyebrows"></div>
+    <div class="emoji__eyes"></div>
+    <div class="emoji__mouth"></div>
   </div>
-}
-@if (emojiEnabled()?.sad) {
-  <div class="emoji emoji--sad" [class.highlight]="emojiHighlight() === 'sad'">
-    <div class="emoji__face">
-      <div class="emoji__eyebrows"></div>
-      <div class="emoji__eyes"></div>
-      <div class="emoji__mouth"></div>
-    </div>
-  </div>
-}
-@if (emojiEnabled()?.angry) {
-  <div class="emoji emoji--angry" [class.highlight]="emojiHighlight() === 'angry'">
-    <div class="emoji__face">
-      <div class="emoji__eyebrows"></div>
-      <div class="emoji__eyes"></div>
-      <div class="emoji__mouth"></div>
-    </div>
-  </div>
+</div>
 }
