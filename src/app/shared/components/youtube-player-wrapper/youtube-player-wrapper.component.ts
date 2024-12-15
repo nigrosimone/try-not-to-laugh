@@ -29,10 +29,10 @@ export class YoutubePlayerWrapperComponent {
 
   protected readonly youtube = viewChild<YouTubePlayer>('youtube');
 
-  protected readonly videoId = input<string>(undefined);
-  protected readonly seek = input<number>(undefined);
-  protected readonly width = input<number>(undefined);
-  protected readonly height = input<number>(undefined);
+  protected readonly videoId = input<string>(null);
+  protected readonly seek = input<number>(null);
+  protected readonly width = input<number>(null);
+  protected readonly height = input<number>(null);
 
   protected readonly stateChange = output<YT.OnStateChangeEvent>();
   protected readonly ready = output<YT.PlayerEvent>();
