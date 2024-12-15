@@ -7,7 +7,8 @@
     "build": "ng build --configuration production --base-href /try-not-to-laugh/",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "server": "npx http-server -p 8080 -c-1 docs"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +22,7 @@
     "@angular/platform-browser": "^19.0.4",
     "@angular/platform-browser-dynamic": "^19.0.4",
     "@angular/router": "^19.0.4",
+    "@angular/service-worker": "^19.0.4",
     "@angular/youtube-player": "^19.0.3",
     "@vladmandic/face-api": "^1.7.14",
     "humanize-duration": "^3.32.1",

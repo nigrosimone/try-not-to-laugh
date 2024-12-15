@@ -5,7 +5,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 export { FaceExpressions };
 
 let URI = '/assets/weights/';
-if (document.location.hostname.includes('github.io')) {
+if (document.location.hostname.includes('github.io') || window.matchMedia('(display-mode: standalone)').matches) {
   URI = '/try-not-to-laugh' + URI;
 }
 @Component({
