@@ -8,7 +8,6 @@ import { HumanizeTimePipe } from '../../../../shared/pipe/humanize-time/humanize
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
-const LOCAL_STORAGE_KEY_RECORD = `arcade-record-duration`;
 
 @Component({
   selector: 'app-arcade',
@@ -200,9 +199,8 @@ export class ArcadeComponent implements OnInit {
    * Setta nel localstorage l'ultima durata del video corrente
    */
   setLocalStorageDuration(value: number): void {
-    localStorage.setItem(`arcade-${this.videoId()}-duration`, value.toString());
     if (value > this.recordDuration()) {
-      localStorage.setItem(LOCAL_STORAGE_KEY_RECORD, value.toString());
+      localStorage.setItem(`arcade-${this.videoId()}-duration`, value.toString());
     }
   }
 
@@ -210,6 +208,6 @@ export class ArcadeComponent implements OnInit {
    * Recupera il valore record
    */
   getRecordStorageDuration(): number {
-    return +localStorage.getItem(LOCAL_STORAGE_KEY_RECORD);
+    return +(localStorage.getItem(`arcade-${this.videoId()}-duration`) || 0);
   }
 }
