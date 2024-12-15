@@ -1,7 +1,7 @@
 <div style="text-align: center;">
     <h1 style="margin-top: 10px;">Seleziona la modalità di gioco</h1>
     <div style="width: 80%; margin: auto;">
-        <mat-selection-list [multiple]="false">
+        <mat-selection-list aria-label="Seleziona la modalità di gioco" [multiple]="false">
             <mat-list-option aria-label="Arcade game" (click)="onArcade($event)">
                 <mat-icon mat-list-icon>tag_faces</mat-icon> Arcade game
             </mat-list-option>
