@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1734289791392,
+  "timestamp": 1734290115733,
   "index": "/try-not-to-laugh/index.html",
   "assetGroups": [
     {
@@ -86,7 +86,7 @@
     "/try-not-to-laugh/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
     "/try-not-to-laugh/index.html": "982cc222d9cc8a053fd4781075bf61a8780e119a",
     "/try-not-to-laugh/main-73TMEJG5.js": "b7a37c8618c148eeaaca22e98dfe4fa192dcabda",
-    "/try-not-to-laugh/manifest.webmanifest": "e236191c05e555dcc7862b39636c78db160ef89b",
+    "/try-not-to-laugh/manifest.webmanifest": "af5c277e33ff70a12e7d689ec73317387e39c890",
     "/try-not-to-laugh/styles-UEYYGSWA.css": "8301393fbe6ed41b513299f850dbe23ea6f6089f"
   },
   "navigationUrls": [
