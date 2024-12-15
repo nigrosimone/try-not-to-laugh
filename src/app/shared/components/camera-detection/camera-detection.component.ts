@@ -3,6 +3,11 @@ import * as faceapi from '@vladmandic/face-api';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export type FaceExpressions = faceapi.FaceExpressions;
+
+let URI = '/assets/weights/';
+if (document.location.hostname.includes('github.io')) {
+  URI = '/try-not-to-laugh' + URI;
+}
 @Component({
   selector: 'app-camera-detection',
   templateUrl: './camera-detection.component.html',
@@ -58,11 +63,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
   private async run(): Promise<void> {
     this.loading.set(true);
-
-    let URI = '/assets/weights/';
-    if (document.location.hostname.includes('github.io')) {
-      URI = '/try-not-to-laugh' + URI;
-    }
 
     const models = [
       faceapi.nets.tinyFaceDetector.loadFromUri(URI),

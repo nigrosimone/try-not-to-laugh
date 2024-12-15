@@ -1,6 +1,16 @@
 import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
 import { YouTubePlayer, YouTubePlayerModule, YOUTUBE_PLAYER_CONFIG } from '@angular/youtube-player';
 
+const PLAYER_VARS = {
+  autoplay: 0,
+  controls: 0,
+  showinfo: 0,
+  modestbranding: 1,
+  rel: 0,
+  enablejsapi: 0,
+  origin: location.href,
+  widget_referrer: location.href
+};
 
 @Component({
   selector: 'app-youtube-player-wrapper',
@@ -28,16 +38,7 @@ export class YoutubePlayerWrapperComponent {
   protected readonly ready = output<YT.PlayerEvent>();
 
   // impostazioni del player di youtube
-  protected readonly playerVars = {
-    autoplay: 0,
-    controls: 0,
-    showinfo: 0,
-    modestbranding: 1,
-    rel: 0,
-    enablejsapi: 0,
-    origin: location.href,
-    widget_referrer: location.href
-  }
+  protected readonly playerVars = PLAYER_VARS;
 
   private seekChecked = false;
   private seekApplied = false;
@@ -99,7 +100,7 @@ export class YoutubePlayerWrapperComponent {
   public getCurrentTimeIntSeeked(): number {
     let time = this.getCurrentTimeInt();
     if (this.seekApplied) {
-      time = time - this.seek();
+      time -= this.seek();
     }
     return time;
   }
