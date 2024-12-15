@@ -15,7 +15,6 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   readonly video = viewChild<ElementRef<HTMLVideoElement>>('video');
   readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
 
-  readonly detectionTimer = input(0);
   readonly drawDetection = input(false);
   readonly width = input<number>(0);
   readonly height = input<number>(0);
@@ -44,7 +43,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   private faceDetectionReady = false;
 
   // timer
-  private timer: ReturnType<typeof setTimeout>;
+  private timer: number;
 
   ngOnDestroy(): void {
     if (this.stream) {
@@ -91,8 +90,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
     if (videoEl.paused || videoEl.ended || !faceapi.nets.tinyFaceDetector.params || this.loading()) {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => this.onPlay(), this.detectionTimer());
+      cancelAnimationFrame(this.timer)
+      this.timer = requestAnimationFrame(() => this.onPlay());
       return;
     }
 
@@ -199,8 +198,8 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
       this.detectionFace.emit(this.faceDetected);
     }
 
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.onPlay(), this.detectionTimer());
+    cancelAnimationFrame(this.timer);
+    this.timer = requestAnimationFrame(() => this.onPlay());
   }
 
   /**
