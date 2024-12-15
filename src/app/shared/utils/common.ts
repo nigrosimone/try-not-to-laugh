@@ -18,6 +18,9 @@ export function beep(): void {
     soundCache.play();
 }
 
+/**
+ * Crea delle particelle
+ */
 export function createParticle(x: number, y: number): void {
     const NUM = 30;
     if (!particleCache) {
