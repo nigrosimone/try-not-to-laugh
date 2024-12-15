@@ -1,4 +1,4 @@
-# TryNotToLaugh
+# Try Not To Laugh
 
 Angular game based on face recognition
 
