@@ -7,11 +7,6 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'select-game',
-        pathMatch: 'full'
-      },
-      {
-        path: 'select-game',
         loadChildren: () => import('./views/select-game/select-game-routing').then(m => m.routes)
       },
       {
