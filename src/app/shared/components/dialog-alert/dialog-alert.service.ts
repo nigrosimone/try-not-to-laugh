@@ -9,6 +9,6 @@ export class DialogAlertService {
   private dialog = inject(MatDialog);
 
   openDialog(data: DialogAlertData): MatDialogRef<DialogAlertComponent> {
-    return this.dialog.open(DialogAlertComponent, {data});
+    return this.dialog.open(DialogAlertComponent, { data });
   }
 }
