@@ -103,24 +103,18 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     }
 
     // cerchiamo l'espressione della faccia nel video della webcam
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let detectSingleFace: any;
-
     const enableLandmarks = this.enableLandmarks();
-    
-    detectSingleFace = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let detectSingleFace: any = faceapi.detectSingleFace(videoEl, new faceapi.TinyFaceDetectorOptions())
     if (enableLandmarks) {
       detectSingleFace = detectSingleFace.withFaceLandmarks();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let withFace: any;
-
     const enableFaceAndGender = this.enableFaceAndGender();
+    let withFace = detectSingleFace.withFaceExpressions();
     if (enableFaceAndGender) {
-      withFace = detectSingleFace.withFaceExpressions().withAgeAndGender();
-    } else {
-      withFace = detectSingleFace.withFaceExpressions();
+      withFace = withFace.withAgeAndGender();
     }
 
     const result = await withFace;
