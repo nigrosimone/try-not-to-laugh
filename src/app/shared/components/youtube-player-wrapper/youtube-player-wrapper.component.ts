@@ -17,21 +17,18 @@ import { YouTubePlayer, YouTubePlayerModule, YOUTUBE_PLAYER_CONFIG } from '@angu
 })
 export class YoutubePlayerWrapperComponent {
 
-  readonly youtube = viewChild<YouTubePlayer>('youtube');
+  protected readonly youtube = viewChild<YouTubePlayer>('youtube');
 
-  readonly videoId = input<string>(undefined);
-  readonly seek = input<number>(undefined);
-  readonly width = input<number>(undefined);
-  readonly height = input<number>(undefined);
+  protected readonly videoId = input<string>(undefined);
+  protected readonly seek = input<number>(undefined);
+  protected readonly width = input<number>(undefined);
+  protected readonly height = input<number>(undefined);
 
-  readonly stateChange = output<YT.OnStateChangeEvent>();
-  readonly ready = output<YT.PlayerEvent>();
-
-  private seekChecked = false;
-  private seekApplied = false;
+  protected readonly stateChange = output<YT.OnStateChangeEvent>();
+  protected readonly ready = output<YT.PlayerEvent>();
 
   // impostazioni del player di youtube
-  public playerVars = {
+  protected readonly playerVars = {
     autoplay: 0,
     controls: 0,
     showinfo: 0,
@@ -42,10 +39,13 @@ export class YoutubePlayerWrapperComponent {
     widget_referrer: location.href
   }
 
+  private seekChecked = false;
+  private seekApplied = false;
+
   /**
    * Evento di cambiamento di stato del player di YouTube
    */
-  onStateChange(e: YT.OnStateChangeEvent): void {
+  protected onStateChange(e: YT.OnStateChangeEvent): void {
     if (e.data === 1) {
       if (!this.seekApplied && !this.seekChecked && this.seek() > 0) {
         this.seekChecked = true;
@@ -61,42 +61,42 @@ export class YoutubePlayerWrapperComponent {
   /**
    * Mette in pausa la webcam
    */
-  pauseVideo(): void {
+  public pauseVideo(): void {
     this.youtube().pauseVideo();
   }
 
   /**
    * Mette in play la webcam
    */
-  playVideo(): void {
+  public playVideo(): void {
     this.youtube().playVideo();
   }
 
   /**
    * Ferma il video
    */
-  stopVideo(): void {
+  public stopVideo(): void {
     this.youtube().stopVideo();
   }
 
   /**
    * Torna i secondi visualizzati del video
    */
-  getCurrentTime(): number {
+  public getCurrentTime(): number {
     return this.youtube().getCurrentTime();
   }
 
   /**
    * Torna i secondi visualizzati del video come intero
    */
-  getCurrentTimeInt(): number {
+  public getCurrentTimeInt(): number {
     return Math.floor(this.getCurrentTime());
   }
 
   /**
    * Torna i secondi visualizzati del video come intero meno i secondi del seek
    */
-  getCurrentTimeIntSeeked(): number {
+  public getCurrentTimeIntSeeked(): number {
     let time = this.getCurrentTimeInt();
     if (this.seekApplied) {
       time = time - this.seek();

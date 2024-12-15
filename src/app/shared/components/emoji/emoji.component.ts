@@ -17,7 +17,6 @@ export interface Emoji {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmojiComponent {
-
-  readonly emojiEnabled = input<Emoji>(null);
-  readonly emojiHighlight = input<keyof Emoji>(null);
+  protected readonly emojiEnabled = input<Emoji>(null);
+  protected readonly emojiHighlight = input<keyof Emoji>(null);
 }

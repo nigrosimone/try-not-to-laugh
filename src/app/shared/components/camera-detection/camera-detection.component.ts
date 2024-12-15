@@ -12,23 +12,23 @@ export type FaceExpressions = faceapi.FaceExpressions;
 })
 export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
 
-  readonly video = viewChild<ElementRef<HTMLVideoElement>>('video');
-  readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
+  protected readonly video = viewChild<ElementRef<HTMLVideoElement>>('video');
+  protected readonly canvas = viewChild<ElementRef<HTMLCanvasElement>>('canvas');
 
-  readonly drawDetection = input(false);
-  readonly width = input<number>(0);
-  readonly height = input<number>(0);
-  readonly missingLimit = input(10);
-  readonly enableFaceAndGender = input(false);
-  readonly enableLandmarks = input(false);
+  protected readonly drawDetection = input(false);
+  protected readonly width = input<number>(0);
+  protected readonly height = input<number>(0);
+  protected readonly missingLimit = input(10);
+  protected readonly enableFaceAndGender = input(false);
+  protected readonly enableLandmarks = input(false);
 
-  readonly detectionReady = output<boolean>();
-  readonly detectionChanges = output<FaceExpressions>();
-  readonly firstDetection = output<boolean>();
-  readonly detectionFace = output<boolean>();
+  protected readonly detectionReady = output<boolean>();
+  protected readonly detectionChanges = output<FaceExpressions>();
+  protected readonly firstDetection = output<boolean>();
+  protected readonly detectionFace = output<boolean>();
 
   // se stiamo caricando gli assets
-  public loading = signal(false);
+  protected loading = signal(false);
 
   // stream della webcam
   private stream: MediaStream;
@@ -86,7 +86,7 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
     this.loading.set(false);
   }
 
-  async onPlay(): Promise<void> {
+  protected async onPlay(): Promise<void> {
     const videoEl = this.video().nativeElement;
 
     // controlliamo che il video sia in esecuzione e i modelli ML siano caricati e pronti
@@ -206,14 +206,14 @@ export class CameraDetectionComponent implements AfterViewInit, OnDestroy {
   /**
    * Mette in pausa la webcam
    */
-  pauseVideo(): void {
+  public pauseVideo(): void {
     this.video().nativeElement.pause();
   }
 
   /**
    * Mette in play la webcam
    */
-  playVideo(): void {
+  public playVideo(): void {
     this.video().nativeElement.play();
   }
 }
