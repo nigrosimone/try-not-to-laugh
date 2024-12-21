@@ -22,9 +22,9 @@ const VIDEOS = ['3z0U4zSsQGc', 'Zj3e1uv6zZA', 'BNiTVsAlzlc'];
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArcadeComponent implements OnInit {
-  private windowService = inject(WindowService);
-  private elRef = inject(ElementRef);
-  private destroyRef = inject(DestroyRef);
+  private readonly windowService = inject(WindowService);
+  private readonly elRef = inject(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
   readonly youtube = viewChild<YoutubePlayerWrapperComponent>('youtube');
@@ -73,7 +73,11 @@ export class ArcadeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.doResize());
+    this.windowService.forEl(this.elRef).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ clientWidth, clientHeight }) => {
+      // -1 altrimenti esce la scrollbar
+      this.width.set(clientWidth - 1);
+      this.height.set(clientHeight - 1);
+    });
   }
 
   /**
@@ -88,26 +92,15 @@ export class ArcadeComponent implements OnInit {
   /**
    * Evento di caricamento completato del player di YouTube
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onYoutubeReady(e: YT.PlayerEvent): void {
+  onYoutubeReady(): void {
     this.youtubeReady.set(true);
-    this.doThirdPartyOnReady();
   }
 
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onDetectionReady(e: boolean): void {
+  onDetectionReady(): void {
     this.detectionReady.set(true);
-    this.doThirdPartyOnReady();
-  }
-
-  /**
-   * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
-   */
-  doThirdPartyOnReady(): void {
-    this.doResize();
   }
 
   /**
@@ -129,9 +122,6 @@ export class ArcadeComponent implements OnInit {
    */
   onDetectionChanges(e: FaceExpressions): void {
 
-    // ridimensioniamo l'area di gioco
-    this.doResize();
-
     // se il player di youtube non  è pronto non facciamo nient'altro
     if (!this.youtubeReady()) {
       return;
@@ -148,13 +138,6 @@ export class ArcadeComponent implements OnInit {
     // recuperiamo il tempo di esecuzione del video di youtube
     this.timeElapse.set(this.youtube().getCurrentTimeIntSeeked())
 
-    this.manageDetectionState();
-  }
-
-  /**
-   * Gestisce lo stato di ricerca della faccia nello stream video
-   */
-  manageDetectionState(): void {
     // se non abbiamo la faccia, mettiamo anche in pausa il video di youtube,
     // questo perchè il video parte in autoplay la prima volta
     if (!this.faceDetected() || !document.hasFocus()) {
@@ -186,13 +169,6 @@ export class ArcadeComponent implements OnInit {
     // riavviamo il video della webcam
     this.cameraDetection().playVideo();
     this.recordDuration.set(this.getRecordStorageDuration());
-  }
-
-  doResize(): void {
-    const { clientWidth, clientHeight } = this.elRef.nativeElement;
-    // -1 altrimenti esce la scrollbar
-    this.width.set(clientWidth - 1);
-    this.height.set(clientHeight - 1);
   }
 
   /**

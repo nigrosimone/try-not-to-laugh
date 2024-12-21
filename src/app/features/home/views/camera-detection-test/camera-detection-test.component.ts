@@ -20,20 +20,11 @@ export class CameraDetectionTestComponent implements AfterViewInit {
 
 
   ngAfterViewInit(): void {
-    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.doResize();
+    this.windowService.forEl(this.elRef).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ clientWidth, clientHeight }) => {
+      // -1 altrimenti esce la scrollbar
+      this.width.set(clientWidth - 1);
+      this.height.set(clientHeight - 1);
     });
-  }
-
-  onDetectionReady(): void {
-    this.doResize();
-  }
-
-  doResize(): void {
-    const { clientWidth, clientHeight } = this.elRef.nativeElement;
-    // -1 altrimenti esce la scrollbar
-    this.width.set(clientWidth - 1);
-    this.height.set(clientHeight - 1);
   }
 }
 

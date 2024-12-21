@@ -23,11 +23,11 @@
   </div>
   @if (!endMatch()) {
     <div class="youtube">
-      <app-youtube-player-wrapper [width]="width()" [height]="height()" [videoId]="videoId()" [seek]="recordDuration()" (ready)="onYoutubeReady($event)"
+      <app-youtube-player-wrapper [width]="width()" [height]="height()" [videoId]="videoId()" [seek]="recordDuration()" (ready)="onYoutubeReady()"
       (stateChange)="onStateChange($event)" #youtube></app-youtube-player-wrapper>
     </div>
   }
   <div class="webcam" [style.display]="readyToGame() ? 'none': 'flex'">
-    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="false" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="false" (detectionReady)="onDetectionReady()" (detectionChanges)="onDetectionChanges($event)" (firstDetection)="onFirstDetection($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
   </div>
 </div>

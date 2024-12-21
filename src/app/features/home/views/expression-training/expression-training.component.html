@@ -25,6 +25,6 @@
     }
   </div>
   <div class="webcam">
-    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="true" (detectionReady)="onDetectionReady($event)" (detectionChanges)="onDetectionChanges($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
+    <app-camera-detection [width]="width()" [height]="height()" [drawDetection]="true" (detectionReady)="onDetectionReady()" (detectionChanges)="onDetectionChanges($event)" (detectionFace)="onDetectionFace($event)" #cameraDetection></app-camera-detection>
   </div>
 </div>

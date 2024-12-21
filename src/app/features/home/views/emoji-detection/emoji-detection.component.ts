@@ -27,9 +27,9 @@ const EXPRESSIONS: Array<Expression> = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmojiDetectionComponent implements AfterViewInit {
-  private destroyRef = inject(DestroyRef);
-  private windowService = inject(WindowService);
-  private elRef = inject(ElementRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly windowService = inject(WindowService);
+  private readonly elRef = inject(ElementRef);
 
   readonly cameraDetection = viewChild<CameraDetectionComponent>('cameraDetection');
 
@@ -56,18 +56,18 @@ export class EmojiDetectionComponent implements AfterViewInit {
   public height = signal(0);
 
   ngAfterViewInit(): void {
-    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.doResize();
+    this.windowService.forEl(this.elRef).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ clientWidth, clientHeight }) => {
+      // -1 altrimenti esce la scrollbar
+      this.width.set(clientWidth - 1);
+      this.height.set(clientHeight - 1);
     });
   }
 
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onDetectionReady(_: boolean): void {
+  onDetectionReady(): void {
     this.detectionReady.set(true);
-    this.doThirdPartyOnReady();
   }
 
   /**
@@ -85,19 +85,9 @@ export class EmojiDetectionComponent implements AfterViewInit {
   }
 
   /**
-   * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
-   */
-  doThirdPartyOnReady(): void {
-    this.doResize();
-  }
-
-  /**
    * Evento di cambiamento del riconoscimento facciale
    */
   onDetectionChanges(e: FaceExpressions): void {
-
-    // ridimensioniamo l'area di gioco
-    this.doResize();
 
     // faccia non trovata
     if (!e) {
@@ -141,12 +131,5 @@ export class EmojiDetectionComponent implements AfterViewInit {
           break;
       }
     }
-  }
-
-  doResize(): void {
-    const { clientWidth, clientHeight } = this.elRef.nativeElement;
-    // -1 altrimenti esce la scrollbar
-    this.width.set(clientWidth - 1);
-    this.height.set(clientHeight - 1);
   }
 }

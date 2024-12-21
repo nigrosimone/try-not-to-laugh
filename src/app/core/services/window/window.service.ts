@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ElementRef, Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 
 @Injectable({ providedIn: 'root' })
@@ -19,5 +19,15 @@ export class WindowService implements OnDestroy {
     ngOnDestroy(): void {
         window.removeEventListener('resize', this.refResize);
         window.removeEventListener('orientationchange', this.refOrientationChange);
+    }
+
+    forEl(elRef: ElementRef<HTMLElement>): Observable<{
+        clientWidth: number;
+        clientHeight: number;
+    }> {
+        return this.viewPortChanges.pipe(map(() => {
+            const { clientWidth, clientHeight } = elRef.nativeElement;
+            return { clientWidth, clientHeight };
+        }));
     }
 }

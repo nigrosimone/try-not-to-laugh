@@ -69,18 +69,18 @@ export class ExpressionTrainingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.windowService.viewPortChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.doResize();
+    this.windowService.forEl(this.elRef).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ clientWidth, clientHeight }) => {
+      // -1 altrimenti esce la scrollbar
+      this.width.set(clientWidth - 1);
+      this.height.set(clientHeight - 1);
     });
   }
 
   /**
    * Evento di caricamento completato del riconoscimento facciale
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onDetectionReady(_: boolean): void {
+  onDetectionReady(): void {
     this.detectionReady.set(true);
-    this.doThirdPartyOnReady();
   }
 
   /**
@@ -91,19 +91,9 @@ export class ExpressionTrainingComponent implements OnInit {
   }
 
   /**
-   * Quando il player youtube o il riconoscimento sono ready, gestiamo le parti comuni
-   */
-  doThirdPartyOnReady(): void {
-    this.doResize();
-  }
-
-  /**
    * Evento di cambiamento del riconoscimento facciale
    */
   onDetectionChanges(e: FaceExpressions): void {
-
-    // ridimensioniamo l'area di gioco
-    this.doResize();
 
     // faccia non trovata
     if (!e) {
@@ -166,13 +156,6 @@ export class ExpressionTrainingComponent implements OnInit {
         this.setLocalStorageDuration(this.matchDuration());
       }
     }
-  }
-
-  doResize(): void {
-    const { clientWidth, clientHeight } = this.elRef.nativeElement;
-    // -1 altrimenti esce la scrollbar
-    this.width.set(clientWidth - 1);
-    this.height.set(clientHeight - 1);
   }
 
   /**
